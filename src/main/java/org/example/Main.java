@@ -92,8 +92,9 @@ public class Main {
     public static void buscarAlojamientos(String ciudad, String tipoAlojamiento, int fechaInicio, int fechaFin,
                                           int cantidadAdultos, int cantidadNinos, int cantidadHabitaciones) {
         System.out.println(ciudad);
-        List<Map<String, Object>> data = filtrarPorSeleccion("ciudad", ciudad, alojamientos);
-
+        List<Map<String, Object>> alojamientoCiudad = filtrarPorSeleccion("ciudad", ciudad, alojamientos);
+        List<Map<String, Object>> alojamientoPorTipo= filtrarPorSeleccion("tipoAlojamiento", ciudad, alojamientoCiudad);
+        
 
     }
 
@@ -125,7 +126,6 @@ public class Main {
         }
         return result;
     }
-
 
     public static int obtenerEntradaValida(Scanner scanner, int maxOption) {
         int opcion = -1;
