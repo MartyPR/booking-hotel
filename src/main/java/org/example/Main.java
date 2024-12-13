@@ -1,8 +1,9 @@
 package org.example;
 
-import java.sql.Array;
+
+import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 public class Main {
     static ArrayList<String> ciudades = new ArrayList<>();
@@ -60,7 +61,14 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Seleccione la ciudad donde le gustaria hospedarse");
         ciudadesEncontradas();
-        System.out.println("hoteles disponibles"+filtrarPorCiudad("Bogotá"));
+        filtrarPorCiudad("Bogotá");
+        
+
+    }
+
+    public static void buscarAlojamientos(String ciudad, String tipoAlojamiento, LocalDate fechaInicio, LocalDate fechaFin,
+                                          int cantidadAdultos, int cantidadNinos, int cantidadHabitaciones) {
+
 
     }
 
@@ -76,14 +84,20 @@ public class Main {
             contador++;
         }
     }
+
     public static List<Map<String, Object>> filtrarPorCiudad(String ciudad) {
         List<Map<String, Object>> result = new ArrayList<>();
+        int contador = 1;
         for (Map<String, Object> alojamiento : alojamientos) {
             // Comprobamos si el alojamiento está en la ciudad buscada
             if (alojamiento.get("ciudad").equals(ciudad)) {
                 result.add(alojamiento);
+
+                System.out.println(contador + ". " + alojamiento.get("nombre"));
+                contador++;
             }
         }
+
         return result;
     }
 
