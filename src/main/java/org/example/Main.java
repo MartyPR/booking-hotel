@@ -63,17 +63,18 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("Seleccione la ciudad donde le gustaria hospedarse");
-            ciudadesEncontradas();
-            int opcionCiudad = scanner.nextInt();
-            if (opcionCiudad >= 1 && opcionCiudad <= ciudades.size()) {
-                System.out.println("Ha seleccionado la ciudad: " + ciudades.get(opcionCiudad - 1));
-                tiposAlojamientoEncontradas();
-                int opcionTipoAlojamiento = scanner.nextInt();
 
-                break;
-            } else {
-                System.out.println("Opción no válida. Inténtelo de nuevo. Escriba un numero entre :" + 1 + "-" + ciudades.size());
-            }
+            ciudadesEncontradas();
+            int opcionCiudad = obtenerEntradaValida(scanner, ciudades.size());
+            if (opcionCiudad == -1) continue;
+            System.out.println("Ha seleccionado la ciudad: " + ciudades.get(opcionCiudad - 1));
+
+            tiposAlojamientoEncontradas();
+            int opcionTipoAlojamiento = obtenerEntradaValida(scanner, tipoAlojamientos.size());
+            if (opcionTipoAlojamiento == -1) continue;
+
+
+
         }
     }
 
@@ -128,13 +129,19 @@ public class Main {
 
     public static int obtenerEntradaValida(Scanner scanner, int maxOption) {
         int opcion = -1;
+        System.out.println((maxOption + 1) + ". Volver");
         while (true) {
             System.out.print("Ingrese un número entre 1 y " + maxOption + ": ");
             try {
                 opcion = scanner.nextInt();
                 if (opcion >= 1 && opcion <= maxOption) {
                     return opcion;
-                } else {
+                }
+                if(opcion == (maxOption+1)){
+                    System.out.println("close");
+                    return -1;
+                }
+                else {
                     System.out.println("Opción no válida. Debe estar entre 1 y " + maxOption + ".");
                 }
             } catch (InputMismatchException e) {
