@@ -71,12 +71,20 @@ public class Main {
             int opcionTipoAlojamiento = seleccionarOpcion(scanner, "Seleccione la tipo de alojamiento donde le gustaria hospedarse", tipoAlojamientos);
             if (opcionTipoAlojamiento == -1) continue;
 
-            int fechaInicio  = obtenerEntradaValida(scanner, "Ingrese  el día de inicio del hospedaje: ");
-            int fechaFin  = obtenerEntradaValida(scanner, "Ingrese el día de finalización del hospedaje: ");
-            int cantidadAdultos = obtenerEntradaValida(scanner, "Ingrese la cantidad de adultos: ");
-            int cantidadNinos = obtenerEntradaValida(scanner, "Ingrese la cantidad de niños: ");
-            int cantidadHabitaciones = obtenerEntradaValida(scanner, "Ingrese la cantidad de habitaciones: ");
+//            int fechaInicio  = obtenerEntradaValida(scanner, "Ingrese  el día de inicio del hospedaje: ");
+//            int fechaFin  = obtenerEntradaValida(scanner, "Ingrese el día de finalización del hospedaje: ");
+//            int cantidadAdultos = obtenerEntradaValida(scanner, "Ingrese la cantidad de adultos: ");
+//            int cantidadNinos = obtenerEntradaValida(scanner, "Ingrese la cantidad de niños: ");
+//            int cantidadHabitaciones = obtenerEntradaValida(scanner, "Ingrese la cantidad de habitaciones: ");
+            int fechaInicio = 10;
+            int fechaFin = 15;
+            int cantidadAdultos = 3;
+            int cantidadNinos = 2;
+            int cantidadHabitaciones = 2;
+            buscarAlojamientos(ciudades.get(opcionCiudad), tipoAlojamientos.get(opcionTipoAlojamiento), fechaInicio, fechaFin, cantidadAdultos, cantidadNinos, cantidadHabitaciones);
 
+
+            break;
 
         }
     }
@@ -84,7 +92,8 @@ public class Main {
     public static void buscarAlojamientos(String ciudad, String tipoAlojamiento, int fechaInicio, int fechaFin,
                                           int cantidadAdultos, int cantidadNinos, int cantidadHabitaciones) {
         System.out.println(ciudad);
-        System.out.println(filtrarPorCiudad(ciudad));
+        List<Map<String, Object>> data = filtrarPorSeleccion("ciudad", ciudad, alojamientos);
+
 
     }
 
@@ -105,22 +114,18 @@ public class Main {
             }
         }
     }
-
-    public static List<Map<String, Object>> filtrarPorCiudad(String ciudad) {
+    
+    public static List<Map<String, Object>> filtrarPorSeleccion(String busqueda, String busqueda2, List<Map<String, Object>> opciones) {
         List<Map<String, Object>> result = new ArrayList<>();
-        int contador = 1;
-        for (Map<String, Object> alojamiento : alojamientos) {
-            // Comprobamos si el alojamiento está en la ciudad buscada
-            if (alojamiento.get("ciudad").equals(ciudad)) {
+        for (Map<String, Object> alojamiento : opciones) {
+            // Comprobamos si el alojamiento está en la ciudad busqueda
+            if (alojamiento.get(busqueda).equals(busqueda2)) {
                 result.add(alojamiento);
-
-                System.out.println(contador + ". " + alojamiento.get("nombre"));
-                contador++;
             }
         }
-
         return result;
     }
+
 
     public static int obtenerEntradaValida(Scanner scanner, int maxOption) {
         int opcion = -1;
@@ -143,6 +148,7 @@ public class Main {
             }
         }
     }
+
 
     public static int seleccionarOpcion(Scanner scanner, String mensaje, List<String> opciones) {
         mostrarOpciones(mensaje, opciones);
