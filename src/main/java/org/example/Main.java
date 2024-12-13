@@ -1,12 +1,12 @@
 package org.example;
 
 
-import java.time.LocalDate;
 import java.util.*;
 
 
 public class Main {
     static ArrayList<String> ciudades = new ArrayList<>();
+    static ArrayList<String> tipoAlojamientos = new ArrayList<>();
     //alojamientos
     static List<Map<String, Object>> alojamientos = Arrays.asList(
             // Hoteles
@@ -58,15 +58,26 @@ public class Main {
 
     );
 
-    public static void main(String[] args) {
-        System.out.println("Seleccione la ciudad donde le gustaria hospedarse");
-        ciudadesEncontradas();
-        filtrarPorCiudad("Bogotá");
-        
 
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("Seleccione la ciudad donde le gustaria hospedarse");
+            ciudadesEncontradas();
+            int opcionCiudad = scanner.nextInt();
+            if (opcionCiudad >= 1 && opcionCiudad <= ciudades.size()) {
+                System.out.println("Ha seleccionado la ciudad: " + ciudades.get(opcionCiudad - 1));
+                tiposAlojamientoEncontradas();
+                int opcionTipoAlojamiento = scanner.nextInt();
+
+                break;
+            } else {
+                System.out.println("Opción no válida. Inténtelo de nuevo. Escriba un numero entre :" + 1 + "-" + ciudades.size());
+            }
+        }
     }
 
-    public static void buscarAlojamientos(String ciudad, String tipoAlojamiento, LocalDate fechaInicio, LocalDate fechaFin,
+    public static void buscarAlojamientos(String ciudad, String tipoAlojamiento, int fechaInicio, int fechaFin,
                                           int cantidadAdultos, int cantidadNinos, int cantidadHabitaciones) {
 
 
@@ -81,6 +92,19 @@ public class Main {
         int contador = 1;
         for (String ciudad : ciudades) {
             System.out.println(contador + ". " + ciudad);
+            contador++;
+        }
+    }
+
+    public static void tiposAlojamientoEncontradas() {
+        for (Map<String, Object> alojamiento : alojamientos) {
+            if (!tipoAlojamientos.contains((String) alojamiento.get("tipoAlojamiento"))) {
+                tipoAlojamientos.add((String) alojamiento.get("tipoAlojamiento"));
+            }
+        }
+        int contador = 1;
+        for (String tipoAlojamiento : tipoAlojamientos) {
+            System.out.println(contador + ". " + tipoAlojamiento);
             contador++;
         }
     }
