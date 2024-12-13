@@ -1,9 +1,10 @@
 package org.example;
 
+import java.sql.Array;
 import java.util.*;
 
 public class Main {
-    static Set<String> ciudades = new HashSet<>();
+    static ArrayList<String> ciudades = new ArrayList<>();
     //alojamientos
     static List<Map<String, Object>> alojamientos = Arrays.asList(
             // Hoteles
@@ -58,12 +59,16 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Seleccione la ciudad donde le gustaria hospedarse");
         ciudadesEncontradas();
+        
     }
 
     public static void ciudadesEncontradas() {
         for (Map<String, Object> alojamiento : alojamientos) {
-            ciudades.add((String) alojamiento.get("ciudad"));
+            if (!ciudades.contains((String) alojamiento.get("ciudad"))) {
+                ciudades.add((String) alojamiento.get("ciudad"));
+            }
         }
+
         int contador = 1;
         for (String ciudad : ciudades) {
             System.out.println(contador + ". " + ciudad);
