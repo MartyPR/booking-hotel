@@ -93,8 +93,8 @@ public class Main {
                                           int cantidadAdultos, int cantidadNinos, int cantidadHabitaciones) {
         System.out.println(ciudad);
         List<Map<String, Object>> alojamientoCiudad = filtrarPorSeleccion("ciudad", ciudad, alojamientos);
-        List<Map<String, Object>> alojamientoPorTipo= filtrarPorSeleccion("tipoAlojamiento", ciudad, alojamientoCiudad);
-        
+        List<Map<String, Object>> alojamientoPorTipo= filtrarPorSeleccion("tipoAlojamiento", tipoAlojamiento, alojamientoCiudad);
+        System.out.println(alojamientoPorTipo);
 
     }
 
