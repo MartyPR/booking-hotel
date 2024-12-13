@@ -3,6 +3,8 @@ package org.example;
 import java.util.*;
 
 public class Main {
+    static Set<String> ciudades = new HashSet<>();
+    //alojamientos
     static List<Map<String, Object>> alojamientos = Arrays.asList(
             // Hoteles
             Map.of(
@@ -59,7 +61,6 @@ public class Main {
     }
 
     public static void ciudadesEncontradas() {
-        Set<String> ciudades = new HashSet<>();
         for (Map<String, Object> alojamiento : alojamientos) {
             ciudades.add((String) alojamiento.get("ciudad"));
         }
@@ -68,7 +69,7 @@ public class Main {
             System.out.println(contador + ". " + ciudad);
             contador++;
         }
-
     }
+
 
 }
