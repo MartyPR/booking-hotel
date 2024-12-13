@@ -1,66 +1,155 @@
 package org.example;
 
+
 import java.util.*;
 
+
 public class Main {
+    static ArrayList<String> ciudades = new ArrayList<>();
+    static ArrayList<String> tipoAlojamientos = new ArrayList<>();
+    //alojamientos
+    static List<Map<String, Object>> alojamientos = Arrays.asList(
+            // Hoteles
+            Map.of(
+                    "nombre", "Hotel Paraíso",
+                    "ciudad", "Cartagena",
+                    "tipoAlojamiento", "Hotel",
+                    "calificacion", 5,
+                    "precioPorNoche", 200000
+
+            ),
+            Map.of(
+                    "nombre", "Hotel Real",
+                    "ciudad", "Bogotá",
+                    "tipoAlojamiento", "Hotel",
+                    "calificacion", 4,
+                    "precioPorNoche", 180000
+            ),
+            // Apartamentos
+            Map.of(
+                    "nombre", "Apartamento Luna",
+                    "ciudad", "Medellín",
+                    "tipoAlojamiento", "Apartamento",
+                    "calificacion", 4,
+                    "precioPorNoche", 150000
+            ),
+            Map.of(
+                    "nombre", "Apartamento Sol",
+                    "ciudad", "Bogotá",
+                    "tipoAlojamiento", "Apartamento",
+                    "calificacion", 5,
+                    "precioPorNoche", 180000
+            ),
+            // Fincas
+            Map.of(
+                    "nombre", "Finca El Encanto",
+                    "ciudad", "Cartagena",
+                    "tipoAlojamiento", "Finca",
+                    "calificacion", 5,
+                    "precioPorNoche", 250000
+            ),
+            Map.of(
+                    "nombre", "Finca La Montaña",
+                    "ciudad", "Medellín",
+                    "tipoAlojamiento", "Finca",
+                    "calificacion", 4,
+                    "precioPorNoche", 220000
+            )
+
+    );
+
+
     public static void main(String[] args) {
-        System.out.println("Booking hotel Project");
+        Scanner scanner = new Scanner(System.in);
+        ciudadesEncontradas();
+        tiposAlojamientoEncontradas();
+        while (true) {
 
-        List<Map<String, Object>> alojamientos = Arrays.asList(
-                // Hoteles
-                Map.of(
-                        "nombre", "Hotel Paraíso",
-                        "ciudad", "Cartagena",
-                        "tipoAlojamiento", "Hotel",
-                        "calificacion", 5,
-                        "precioPorNoche", 200000
+            int opcionCiudad = seleccionarOpcion(scanner,"Seleccione la ciudad donde le gustaria hospedarse",ciudades);
+            if (opcionCiudad == -1) continue;
 
-                ),
-                Map.of(
-                        "nombre", "Hotel Real",
-                        "ciudad", "Bogotá",
-                        "tipoAlojamiento", "Hotel",
-                        "calificacion", 4,
-                        "precioPorNoche", 180000
-                ),
-                // Apartamentos
-                Map.of(
-                        "nombre", "Apartamento Luna",
-                        "ciudad", "Medellín",
-                        "tipoAlojamiento", "Apartamento",
-                        "calificacion", 4,
-                        "precioPorNoche", 150000
-                ),
-                Map.of(
-                        "nombre", "Apartamento Sol",
-                        "ciudad", "Bogotá",
-                        "tipoAlojamiento", "Apartamento",
-                        "calificacion", 5,
-                        "precioPorNoche", 180000
-                ),
-                // Fincas
-                Map.of(
-                        "nombre", "Finca El Encanto",
-                        "ciudad", "Cartagena",
-                        "tipoAlojamiento", "Finca",
-                        "calificacion", 5,
-                        "precioPorNoche", 250000
-                ),
-                Map.of(
-                        "nombre", "Finca La Montaña",
-                        "ciudad", "Medellín",
-                        "tipoAlojamiento", "Finca",
-                        "calificacion", 4,
-                        "precioPorNoche", 220000
-                )
+            int opcionTipoAlojamiento = seleccionarOpcion(scanner,"Seleccione la ciudad donde le gustaria hospedarse",ciudades);
+            if (opcionTipoAlojamiento == -1) continue;
 
-        );
-        Set<String> ciudades = new HashSet<>();
-        for (Map<String, Object> alojamiento : alojamientos) {
-            ciudades.add((String) alojamiento.get("ciudad"));
+
+
         }
-            
+    }
 
+    public static void buscarAlojamientos(String ciudad, String tipoAlojamiento, int fechaInicio, int fechaFin,
+                                          int cantidadAdultos, int cantidadNinos, int cantidadHabitaciones) {
 
     }
+
+    public static void ciudadesEncontradas() {
+        ciudades.clear();
+        for (Map<String, Object> alojamiento : alojamientos) {
+            if (!ciudades.contains((String) alojamiento.get("ciudad"))) {
+                ciudades.add((String) alojamiento.get("ciudad"));
+            }
+        }
+    }
+
+    public static void tiposAlojamientoEncontradas() {
+        tipoAlojamientos.clear();
+        for (Map<String, Object> alojamiento : alojamientos) {
+            if (!tipoAlojamientos.contains((String) alojamiento.get("tipoAlojamiento"))) {
+                tipoAlojamientos.add((String) alojamiento.get("tipoAlojamiento"));
+            }
+        }
+    }
+
+    public static List<Map<String, Object>> filtrarPorCiudad(String ciudad) {
+        List<Map<String, Object>> result = new ArrayList<>();
+        int contador = 1;
+        for (Map<String, Object> alojamiento : alojamientos) {
+            // Comprobamos si el alojamiento está en la ciudad buscada
+            if (alojamiento.get("ciudad").equals(ciudad)) {
+                result.add(alojamiento);
+
+                System.out.println(contador + ". " + alojamiento.get("nombre"));
+                contador++;
+            }
+        }
+
+        return result;
+    }
+
+    public static int obtenerEntradaValida(Scanner scanner, int maxOption) {
+        int opcion = -1;
+        while (true) {
+            System.out.print("Ingrese un número entre 1 y " + maxOption + ": ");
+            try {
+                opcion = scanner.nextInt();
+                if (opcion >= 1 && opcion <= maxOption) {
+                    return opcion;
+                }
+                if(opcion == (maxOption+1)){
+                    System.out.println("close");
+                    return -1;
+                }
+                else {
+                    System.out.println("Opción no válida. Debe estar entre 1 y " + maxOption + ".");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada no válida. Por favor, ingrese un número.");
+                scanner.next();
+            }
+        }
+    }
+
+    public static int seleccionarOpcion(Scanner scanner, String mensaje, List<String> opciones){
+        mostrarOpciones(mensaje,opciones);
+        return obtenerEntradaValida(scanner,opciones.size());
+    }
+
+    public static void mostrarOpciones(String mensaje, List<String> opciones){
+        System.out.println(mensaje);
+        for (int i = 0; i < opciones.size(); i++) {
+            System.out.println((i + 1) + ". " + opciones.get(i));
+        }
+        System.out.println((opciones.size() + 2) + ". Volver");
+    }
+
+
 }
