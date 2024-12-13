@@ -65,12 +65,17 @@ public class Main {
         tiposAlojamientoEncontradas();
         while (true) {
 
-            int opcionCiudad = seleccionarOpcion(scanner,"Seleccione la ciudad donde le gustaria hospedarse",ciudades);
+            int opcionCiudad = seleccionarOpcion(scanner, "Seleccione la ciudad donde le gustaria hospedarse", ciudades);
             if (opcionCiudad == -1) continue;
 
-            int opcionTipoAlojamiento = seleccionarOpcion(scanner,"Seleccione la ciudad donde le gustaria hospedarse",ciudades);
+            int opcionTipoAlojamiento = seleccionarOpcion(scanner, "Seleccione la tipo de alojamiento donde le gustaria hospedarse", tipoAlojamientos);
             if (opcionTipoAlojamiento == -1) continue;
 
+            int fechaInicio  = obtenerEntradaValida(scanner, "Ingrese  el día de inicio del hospedaje: ");
+            int fechaFin  = obtenerEntradaValida(scanner, "Ingrese el día de finalización del hospedaje: ");
+            int cantidadAdultos = obtenerEntradaValida(scanner, "Ingrese la cantidad de adultos: ");
+            int cantidadNinos = obtenerEntradaValida(scanner, "Ingrese la cantidad de niños: ");
+            int cantidadHabitaciones = obtenerEntradaValida(scanner, "Ingrese la cantidad de habitaciones: ");
 
 
         }
@@ -78,6 +83,8 @@ public class Main {
 
     public static void buscarAlojamientos(String ciudad, String tipoAlojamiento, int fechaInicio, int fechaFin,
                                           int cantidadAdultos, int cantidadNinos, int cantidadHabitaciones) {
+        System.out.println(ciudad);
+        System.out.println(filtrarPorCiudad(ciudad));
 
     }
 
@@ -124,11 +131,10 @@ public class Main {
                 if (opcion >= 1 && opcion <= maxOption) {
                     return opcion;
                 }
-                if(opcion == (maxOption+1)){
+                if (opcion == (maxOption + 1)) {
                     System.out.println("close");
                     return -1;
-                }
-                else {
+                } else {
                     System.out.println("Opción no válida. Debe estar entre 1 y " + maxOption + ".");
                 }
             } catch (InputMismatchException e) {
@@ -138,18 +144,34 @@ public class Main {
         }
     }
 
-    public static int seleccionarOpcion(Scanner scanner, String mensaje, List<String> opciones){
-        mostrarOpciones(mensaje,opciones);
-        return obtenerEntradaValida(scanner,opciones.size());
+    public static int seleccionarOpcion(Scanner scanner, String mensaje, List<String> opciones) {
+        mostrarOpciones(mensaje, opciones);
+        return obtenerEntradaValida(scanner, opciones.size());
     }
 
-    public static void mostrarOpciones(String mensaje, List<String> opciones){
+    public static void mostrarOpciones(String mensaje, List<String> opciones) {
         System.out.println(mensaje);
         for (int i = 0; i < opciones.size(); i++) {
             System.out.println((i + 1) + ". " + opciones.get(i));
         }
-        System.out.println((opciones.size() + 2) + ". Volver");
+        System.out.println((opciones.size() + 1) + ". Volver");
     }
 
 
+    public static int obtenerEntradaValida(Scanner scanner, String mensaje) {
+        int opcion;
+        while (true) {
+            System.out.print(mensaje);
+            try {
+                opcion = scanner.nextInt();
+                if (opcion >= 0) {
+                    return opcion;  // Aceptamos solo valores no negativos
+                }
+                System.out.println("La cantidad no puede ser negativa.");
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada no válida. Por favor, ingrese un número.");
+                scanner.next(); // Limpiar el buffer
+            }
+        }
+    }
 }
