@@ -83,6 +83,7 @@ public class Main {
     }
 
     public static void ciudadesEncontradas() {
+        ciudades.clear();
         for (Map<String, Object> alojamiento : alojamientos) {
             if (!ciudades.contains((String) alojamiento.get("ciudad"))) {
                 ciudades.add((String) alojamiento.get("ciudad"));
@@ -96,6 +97,7 @@ public class Main {
     }
 
     public static void tiposAlojamientoEncontradas() {
+        tipoAlojamientos.clear();
         for (Map<String, Object> alojamiento : alojamientos) {
             if (!tipoAlojamientos.contains((String) alojamiento.get("tipoAlojamiento"))) {
                 tipoAlojamientos.add((String) alojamiento.get("tipoAlojamiento"));
