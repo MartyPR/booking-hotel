@@ -61,16 +61,14 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        ciudadesEncontradas();
+        tiposAlojamientoEncontradas();
         while (true) {
-            System.out.println("Seleccione la ciudad donde le gustaria hospedarse");
 
-            ciudadesEncontradas();
-            int opcionCiudad = obtenerEntradaValida(scanner, ciudades.size());
+            int opcionCiudad = seleccionarOpcion(scanner,"Seleccione la ciudad donde le gustaria hospedarse",ciudades);
             if (opcionCiudad == -1) continue;
-            System.out.println("Ha seleccionado la ciudad: " + ciudades.get(opcionCiudad - 1));
 
-            tiposAlojamientoEncontradas();
-            int opcionTipoAlojamiento = obtenerEntradaValida(scanner, tipoAlojamientos.size());
+            int opcionTipoAlojamiento = seleccionarOpcion(scanner,"Seleccione la ciudad donde le gustaria hospedarse",ciudades);
             if (opcionTipoAlojamiento == -1) continue;
 
 
@@ -90,11 +88,6 @@ public class Main {
                 ciudades.add((String) alojamiento.get("ciudad"));
             }
         }
-        int contador = 1;
-        for (String ciudad : ciudades) {
-            System.out.println(contador + ". " + ciudad);
-            contador++;
-        }
     }
 
     public static void tiposAlojamientoEncontradas() {
@@ -103,11 +96,6 @@ public class Main {
             if (!tipoAlojamientos.contains((String) alojamiento.get("tipoAlojamiento"))) {
                 tipoAlojamientos.add((String) alojamiento.get("tipoAlojamiento"));
             }
-        }
-        int contador = 1;
-        for (String tipoAlojamiento : tipoAlojamientos) {
-            System.out.println(contador + ". " + tipoAlojamiento);
-            contador++;
         }
     }
 
@@ -129,7 +117,6 @@ public class Main {
 
     public static int obtenerEntradaValida(Scanner scanner, int maxOption) {
         int opcion = -1;
-        System.out.println((maxOption + 1) + ". Volver");
         while (true) {
             System.out.print("Ingrese un número entre 1 y " + maxOption + ": ");
             try {
@@ -149,6 +136,19 @@ public class Main {
                 scanner.next();
             }
         }
+    }
+
+    public static int seleccionarOpcion(Scanner scanner, String mensaje, List<String> opciones){
+        mostrarOpciones(mensaje,opciones);
+        return obtenerEntradaValida(scanner,opciones.size());
+    }
+
+    public static void mostrarOpciones(String mensaje, List<String> opciones){
+        System.out.println(mensaje);
+        for (int i = 0; i < opciones.size(); i++) {
+            System.out.println((i + 1) + ". " + opciones.get(i));
+        }
+        System.out.println((opciones.size() + 2) + ". Volver");
     }
 
 
