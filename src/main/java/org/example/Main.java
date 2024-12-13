@@ -1,8 +1,6 @@
 package org.example;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -27,7 +25,12 @@ public class Main {
 
                 )
         );
+        Set<String> ciudades = new HashSet<>();
+        for (Map<String, Object> alojamiento : alojamientos) {
+            ciudades.add((String) alojamiento.get("ciudad"));
+        }
 
+        System.out.println(ciudades);
 
     }
 }
