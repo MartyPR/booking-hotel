@@ -80,7 +80,6 @@ public class Main {
     public static void buscarAlojamientos(String ciudad, String tipoAlojamiento, int fechaInicio, int fechaFin,
                                           int cantidadAdultos, int cantidadNinos, int cantidadHabitaciones) {
 
-
     }
 
     public static void ciudadesEncontradas() {
@@ -123,6 +122,24 @@ public class Main {
         }
 
         return result;
+    }
+
+    public static int obtenerEntradaValida(Scanner scanner, int maxOption) {
+        int opcion = -1;
+        while (true) {
+            System.out.print("Ingrese un número entre 1 y " + maxOption + ": ");
+            try {
+                opcion = scanner.nextInt();
+                if (opcion >= 1 && opcion <= maxOption) {
+                    return opcion;
+                } else {
+                    System.out.println("Opción no válida. Debe estar entre 1 y " + maxOption + ".");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada no válida. Por favor, ingrese un número.");
+                scanner.next();
+            }
+        }
     }
 
 
