@@ -2,6 +2,7 @@ package org.example;
 
 import java.sql.Array;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
     static ArrayList<String> ciudades = new ArrayList<>();
@@ -59,7 +60,8 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Seleccione la ciudad donde le gustaria hospedarse");
         ciudadesEncontradas();
-        
+        System.out.println("hoteles disponibles"+filtrarPorCiudad("Bogotá"));
+
     }
 
     public static void ciudadesEncontradas() {
@@ -68,12 +70,21 @@ public class Main {
                 ciudades.add((String) alojamiento.get("ciudad"));
             }
         }
-
         int contador = 1;
         for (String ciudad : ciudades) {
             System.out.println(contador + ". " + ciudad);
             contador++;
         }
+    }
+    public static List<Map<String, Object>> filtrarPorCiudad(String ciudad) {
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Map<String, Object> alojamiento : alojamientos) {
+            // Comprobamos si el alojamiento está en la ciudad buscada
+            if (alojamiento.get("ciudad").equals(ciudad)) {
+                result.add(alojamiento);
+            }
+        }
+        return result;
     }
 
 
