@@ -114,12 +114,12 @@ public class Main {
             }
         }
     }
-    
-    public static List<Map<String, Object>> filtrarPorSeleccion(String busqueda, String busqueda2, List<Map<String, Object>> opciones) {
+
+    public static List<Map<String, Object>> filtrarPorSeleccion(String claveFiltro, String valorFiltro, List<Map<String, Object>> opciones) {
         List<Map<String, Object>> result = new ArrayList<>();
         for (Map<String, Object> alojamiento : opciones) {
             // Comprobamos si el alojamiento está en la ciudad busqueda
-            if (alojamiento.get(busqueda).equals(busqueda2)) {
+            if (alojamiento.get(claveFiltro).equals(valorFiltro)) {
                 result.add(alojamiento);
             }
         }
