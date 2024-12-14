@@ -5,18 +5,18 @@ import java.util.*;
 public class Main {
     static String[] nombres = {
             "Hotel Paraíso", "Hotel Real", "Apartamento Luna",
-            "Apartamento Sol", "Finca El Encanto", "Finca La Montaña","Resort Brisa Marina"
+            "Apartamento Sol", "Finca El Encanto", "Finca La Montaña", "Resort Brisa Marina"
     };
     static String[] ciudades = {
             "Cartagena", "Bogotá", "Medellín", "Bogotá",
-            "Cartagena", "Medellín","Cartagena"
+            "Cartagena", "Medellín", "Cartagena"
     };
     static String[] tipos = {
             "Hotel", "Hotel", "Apartamento", "Apartamento",
-            "Finca", "Finca","Día de Sol"
+            "Finca", "Finca", "Día de Sol"
     };
     static double[] calificaciones = {5.0, 4.2, 4.4, 3, 3.8, 4.0};
-    static int[][] preciosPorNoche = {{20,20}, {180000}, {150000}, {180000}, {250000}, {220000}};
+    static int[][] preciosPorNoche = {{20, 20}, {180000}, {150000}, {180000}, {250000}, {220000}};
 //    static String [][] habitaciones={{}};
 
 
@@ -43,8 +43,8 @@ public class Main {
 ////            int cantidadAdultos = obtenerEntradaValida(scanner, "Ingrese la cantidad de adultos: ");
 ////            int cantidadNinos = obtenerEntradaValida(scanner, "Ingrese la cantidad de niños: ");
 ////            int cantidadHabitaciones = obtenerEntradaValida(scanner, "Ingrese la cantidad de habitaciones: ");
-            int fechaInicio = 10;
-            int fechaFin = 15;
+            int fechaInicio = 1;
+            int fechaFin = 5;
             int cantidadAdultos = 3;
             int cantidadNinos = 2;
             int cantidadHabitaciones = 2;
@@ -62,10 +62,10 @@ public class Main {
         List<Integer> alojamientoCiudad = filtrarPorSeleccion(ciudad, ciudades);
         for (int indexCiudad : alojamientoCiudad) {
             if (tipos[indexCiudad] == tipoAlojamiento) {
-                System.out.println("Ciudad: " + ciudad +"\n"+ "Tipo: "+tipos[indexCiudad]+"\n"+"Nombre:"+ nombres[indexCiudad]+"\n"+ calificaciones[indexCiudad]+"⭐");
+                System.out.println("Ciudad: " + ciudad + "\n" + "Tipo: " + tipos[indexCiudad] + "\n" + "Nombre:" + nombres[indexCiudad] + "\n" + calificaciones[indexCiudad] + "⭐");
             }
         }
-        double precio =calcularprecio(fechaInicio,fechaFin,cantidadHabitaciones);
+        double precio = calcularprecio(fechaInicio, fechaFin, cantidadHabitaciones);
 
 
     }
@@ -118,7 +118,11 @@ public class Main {
         } else if (diaInicio >= 5 && diaFin <= 10) {
             aumentoDesc = -0.08;  // Descuento del 8%
         }
-        return 0;
+        double precioFinal = precioTotal * (1 + aumentoDesc);
+        System.out.println("Precio total: $" + precioTotal);
+        System.out.println("Aumento/Descuento aplicado: " + (aumentoDesc * 100) + "%");
+        System.out.println("Precio final: $" + precioFinal);
+        return precioFinal;
     }
 
     public static int obtenerEntradaValida(Scanner scanner, int maxOption) {
