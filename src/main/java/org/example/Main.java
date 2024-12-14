@@ -61,8 +61,9 @@ public class Main {
     };
     static boolean[] incluyeAlmuerzo = {false, false, false, false, false, false, true, false};
 
-    static ArrayList<String> ciudadesEncontradas = new ArrayList<>();
-    static ArrayList<String> tipoAlojamientos = new ArrayList<>();
+    static ArrayList<String> ciudadesEncontradas = new ArrayList<>();//guarda las ciudades existentes
+    static ArrayList<String> tipoAlojamientos = new ArrayList<>();//guarda los tipos de alojamientos existentes
+    static ArrayList<String> reservaciones = new ArrayList<>();
 
 
     public static void main(String[] args) {
@@ -89,30 +90,34 @@ public class Main {
             int cantidadAdultos = 3;
             int cantidadNinos = 2;
             int cantidadHabitaciones = 2;
-            int[] optionEncontrada = buscarAlojamientos(ciudadesEncontradas.get(opcionCiudad), tipoAlojamientos.get(opcionTipoAlojamiento), fechaInicio, fechaFin, cantidadAdultos, cantidadNinos, cantidadHabitaciones);
+            ArrayList<String> optionEncontrada = buscarAlojamientos(ciudadesEncontradas.get(opcionCiudad), tipoAlojamientos.get(opcionTipoAlojamiento), fechaInicio, fechaFin, cantidadAdultos, cantidadNinos, cantidadHabitaciones);
+            System.out.println("----------------------------------------------------------------------------------------------------------------");
+            int opcionConfirmarHabitacion = seleccionarOpcion(scanner, "Seleccione una opcion que le gustaria hospedarse:", optionEncontrada);
+            if (opcionConfirmarHabitacion == -1) continue;
 
-            for (int i = 0; i < optionEncontrada.length; i++) {
-                System.out.println(optionEncontrada[i]);
-            }
+
+
             break;
 //
         }
     }
 
-    public static int[] buscarAlojamientos(String ciudad, String tipoAlojamiento, int fechaInicio, int fechaFin,
-                                           int cantidadAdultos, int cantidadNinos, int cantidadHabitaciones) {
+    public static ArrayList<String> buscarAlojamientos(String ciudad, String tipoAlojamiento, int fechaInicio, int fechaFin,
+                                                       int cantidadAdultos, int cantidadNinos, int cantidadHabitaciones) {
         System.out.println("-------------------------------------------------------------------------------------");
+        System.out.println("Consulta Realizada:");
         List<Integer> alojamientoCiudad = filtrarPorSeleccion(ciudad, ciudades);
-        int[] alojamientosfiltrados = new int[alojamientoCiudad.size()];
+
+        ArrayList<String> alojamientosfiltrados = new ArrayList<>();
         int contador = 0;
         for (int indexCiudad : alojamientoCiudad) {
             if (tipos[indexCiudad] == tipoAlojamiento) {
                 System.out.println("Ciudad: " + ciudad + "\n" + "\n" + "Nombre:" + nombres[indexCiudad] + "\n" + calificaciones[indexCiudad] + "⭐");
-                alojamientosfiltrados[contador] = indexCiudad;
+                alojamientosfiltrados.add(nombres[indexCiudad]);
                 if (tipos[indexCiudad] == "Día de Sol") {
                     mostrarActividades(indexCiudad);
                 } else {
-                    double precio = calcularprecio(fechaInicio, fechaFin, cantidadHabitaciones, preciosPorNoche[indexCiudad][0]);
+                    double precio = calcularPrecio(fechaInicio, fechaFin, cantidadHabitaciones, preciosPorNoche[indexCiudad][0]);
                 }
             }
             contador++;
@@ -155,7 +160,7 @@ public class Main {
         return resultadoFiltro;
     }
 
-    public static double calcularprecio(int diaInicio, int diaFin, int cantidadHabitaciones, double precioHabitacion) {
+    public static double calcularPrecio(int diaInicio, int diaFin, int cantidadHabitaciones, double precioHabitacion) {
 
         int noches = diaFin - diaInicio + 1;
         double precioTotal = precioHabitacion * noches * cantidadHabitaciones;
@@ -193,10 +198,19 @@ public class Main {
 
     }
 
+    public static void confirmarHabitaciones(String nombreHotel, int diaInicio, int diaFin, int cantidadAdultos, int cantidadNinos, int cantidadHabitaciones) {
+        System.out.println("-------------------------------------------------------------------------------------");
+        System.out.println("Alojamiento seleccionado: "+ nombreHotel);
+
+
+    }
+    //funciones para validar y mostrar menus
+
+
     public static int obtenerEntradaValida(Scanner scanner, int maxOption) {
         int opcion = -1;
         while (true) {
-            System.out.print("Ingrese un número entre 1 y " + maxOption + ": ");
+            System.out.print("Ingrese un número" + ": ");
             try {
                 opcion = scanner.nextInt();
                 if (opcion >= 1 && opcion <= maxOption) {
@@ -206,7 +220,7 @@ public class Main {
                     System.out.println("close");
                     return -1;
                 } else {
-                    System.out.println("Opción no válida. Debe estar entre 1 y " + maxOption + ".");
+                    System.out.println("Opción no válida. Debe estar entre 1 y " + (maxOption+1) + ".");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Entrada no válida. Por favor, ingrese un número.");
@@ -215,12 +229,12 @@ public class Main {
         }
     }
 
-    public static int seleccionarOpcion(Scanner scanner, String mensaje, List<String> opciones) {
+    public static int seleccionarOpcion(Scanner scanner, String mensaje, ArrayList<String> opciones) {
         mostrarOpciones(mensaje, opciones);
         return obtenerEntradaValida(scanner, opciones.size());
     }
 
-    public static void mostrarOpciones(String mensaje, List<String> opciones) {
+    public static void mostrarOpciones(String mensaje, ArrayList<String> opciones) {
         System.out.println(mensaje);
         for (int i = 0; i < opciones.size(); i++) {
             System.out.println((i + 1) + ". " + opciones.get(i));
