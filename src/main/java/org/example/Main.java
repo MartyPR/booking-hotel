@@ -66,6 +66,7 @@ public class Main {
             },
 
     };
+    
     //index hotel, index habitacion, index
     static int[][] reservacion;
 
@@ -76,74 +77,84 @@ public class Main {
     static ArrayList<String> tipoAlojamientos = new ArrayList<>();//guarda los tipos de alojamientos existentes
     static ArrayList<String> alojamientosfiltrados = new ArrayList<>();
 
-
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
         ciudadesEncontradas();
         tiposAlojamientoEncontradas();
 
-        int opcionCiudad = -1;
+        int ciudadSeleccionada = -1;
+        int tipoAlojamientoSeleccionada = -1;
         int opcionConfirmarAlojamiento = -1;
         int fechaInicio = -1;
         int fechaFin = -1;
         int cantidadAdultos = -1;
         int cantidadNinos = -1;
         int cantidadHabitaciones = -1;
-        int opcionTipoAlojamiento = -1;
+
         int opcionHabitacion = -1;
-        ArrayList<Integer> optionEncontrada = new ArrayList<Integer>();
+        int habitacionSeleccionada = -1;
+        ArrayList<Integer> opcionesEncontrada = new ArrayList<Integer>();
+        ArrayList<String> opcionesHabitaciones = new ArrayList<String>();
 
         int step = 1; // Inicio en el paso 1
 
         while (step >= 1 && step <= 6) {
             switch (step) {
                 case 1:
-                    opcionCiudad = seleccionarOpcion(scanner, "Seleccione la ciudad donde le gustaría hospedarse", ciudadesEncontradas);
-                    System.out.println(opcionCiudad == -1 ? "Ya está en el primer paso. No puede volver más atrás." : "");
-                    step = opcionCiudad == -1 ? step : step + 1;
+                    ciudadSeleccionada = seleccionarOpcion(scanner, "Seleccione la ciudad donde le gustaría hospedarse", ciudadesEncontradas);
+                    System.out.println(ciudadSeleccionada == -1 ? "Ya está en el primer paso. No puede volver más atrás." : "");
+                    step = ciudadSeleccionada == -1 ? step : step + 1;
                     break;
 
                 case 2:
-                    opcionTipoAlojamiento = seleccionarOpcion(scanner, "Seleccione el tipo de alojamiento donde le gustaría hospedarse", tipoAlojamientos);
-                    if (opcionTipoAlojamiento == -1) {
+                    tipoAlojamientoSeleccionada = seleccionarOpcion(scanner, "Seleccione el tipo de alojamiento donde le gustaría hospedarse", tipoAlojamientos);
+                    if (tipoAlojamientoSeleccionada == -1) {
                         step--;
                     } else {
                         step++;
                     }
                     break;
                 case 3:
+                    System.out.println(opcionesEncontrada);
                     fechaInicio = 1;
                     fechaFin = 5;
                     cantidadAdultos = 3;
                     cantidadNinos = 2;
                     cantidadHabitaciones = 2;
                     step++;
-                    optionEncontrada = buscarAlojamientos(ciudadesEncontradas.get(opcionCiudad), tipoAlojamientos.get(opcionTipoAlojamiento), fechaInicio, fechaFin, cantidadAdultos, cantidadNinos, cantidadHabitaciones);
-                    System.out.println(optionEncontrada);
+
                     break;
                 case 4:
+                    opcionesEncontrada = buscarAlojamientos(ciudadesEncontradas.get(ciudadSeleccionada), tipoAlojamientos.get(tipoAlojamientoSeleccionada), fechaInicio, fechaFin, cantidadAdultos, cantidadNinos, cantidadHabitaciones);
+                    System.out.println(opcionesEncontrada);
                     opcionConfirmarAlojamiento = seleccionarOpcion(scanner, "Seleccione una opción en la que le gustaría hospedarse:", alojamientosfiltrados);
                     if (opcionConfirmarAlojamiento == -1) {
+                        step = step - 2;
+
+                    } else {
+                        step++;
+                    }
+
+                    //opcionesEncontrada.get(opcionConfirmarAlojamiento) -> encontrar index expecifico de alojamiento
+                    break;
+                case 5:
+                    confirmarHabitaciones(nombres[opcionesEncontrada.get(opcionConfirmarAlojamiento)], fechaInicio, fechaFin, cantidadAdultos, cantidadNinos, cantidadHabitaciones, opcionesEncontrada.get(opcionConfirmarAlojamiento));
+                    System.out.println("--------------------------------------------------------------\n");
+                    opcionesHabitaciones.clear();
+                    for (int i = 0; i < habitaciones[opcionesEncontrada.get(opcionConfirmarAlojamiento)].length; i++) {
+                        opcionesHabitaciones.add(habitaciones[opcionesEncontrada.get(opcionConfirmarAlojamiento)][i][0]);
+                    }
+                    habitacionSeleccionada = seleccionarOpcion(scanner, "Seleccionar el tipo de habitacion que desea", opcionesHabitaciones);
+                    if (habitacionSeleccionada == -1) {
                         step--;
                     } else {
                         step++;
                     }
                     break;
-                case 5:
-                    confirmarHabitaciones(nombres[optionEncontrada.get(opcionConfirmarAlojamiento)], fechaInicio, fechaFin, cantidadAdultos, cantidadNinos, cantidadHabitaciones, optionEncontrada.get(opcionConfirmarAlojamiento));
-                    System.out.println("¡Reserva confirmada exitosamente!");
-                    //optionEncontrada.get(opcionConfirmarAlojamiento) -> encontrar index expecifico de alojamiento
-                    step++;
-
-                    break;
                 case 6:
-//                    opcionCiudad= seleccionarOpcion(scanner,"Seleccione la habitacion interesada",habitaciones[][])
-//                    System.out.println(habitaciones[opcionConfirmarAlojamiento][0]);
-//                    step++;
-
-
                     break;
+
 
             }
 
@@ -170,6 +181,7 @@ public class Main {
         System.out.println("Consulta Realizada:");
         List<Integer> alojamientoCiudad = filtrarPorSeleccion(ciudad, ciudades);
         ArrayList<Integer> alojamientoFiltradosIndex = new ArrayList<>();
+        alojamientosfiltrados.clear();
         int contador = 0;
         for (int indexCiudad : alojamientoCiudad) {
             if (tipos[indexCiudad] == tipoAlojamiento) {
@@ -251,6 +263,7 @@ public class Main {
         for (String[] habitacionesHotel : habitaciones[indexAlojamiento]) {
             System.out.println(tipoAlojamiento == "Día de Sol" ?
                     "Tipo " + contadorTipo + ":" + "\n" + "Actividad(es)" : (contadorTipo + 1) + ". " + habitaciones[indexAlojamiento][contadorTipo][0]);
+
             if (tipoAlojamiento == "Día de Sol") {
                 for (String actividad : habitaciones[indexAlojamiento][contadorTipo]) {
                     System.out.println(contadorActividad + ". " + actividad);
