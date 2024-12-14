@@ -65,6 +65,7 @@ public class Main {
                 System.out.println("Ciudad: " + ciudad +"\n"+ "Tipo: "+tipos[indexCiudad]+"\n"+"Nombre:"+ nombres[indexCiudad]+"\n"+ calificaciones[indexCiudad]+"⭐");
             }
         }
+        double precio =calcularprecio(fechaInicio,fechaFin,cantidadHabitaciones);
 
 
     }
@@ -102,8 +103,21 @@ public class Main {
         return resultadoFiltro;
     }
 
-    public static double calcularprecio(){
-        
+    public static double calcularprecio(int diaInicio, int diaFin, int cantidadHabitaciones) {
+        // Calcular el número de noches de estadía
+        int noches = diaFin - diaInicio + 1;
+//        Habitacion habitacion = habitaciones.get(0);  // Tomamos la habitación más simple (la primera)
+        double precioTotal = 200000 * noches * cantidadHabitaciones;
+
+        // Aplicar aumento o descuento según las fechas
+        double aumentoDesc = 0.0;
+        if (diaFin >= 25) {  // Los últimos 5 días del mes
+            aumentoDesc = 0.15;  // Aumento del 15%
+        } else if (diaInicio >= 10 && diaFin <= 15) {
+            aumentoDesc = 0.10;  // Aumento del 10%
+        } else if (diaInicio >= 5 && diaFin <= 10) {
+            aumentoDesc = -0.08;  // Descuento del 8%
+        }
         return 0;
     }
 
