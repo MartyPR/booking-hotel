@@ -67,8 +67,8 @@ public class Main {
 
     };
     //index hotel, index habitacion, index
-    static int [][] reservacion;
-    
+    static int[][] reservacion;
+
 
     static boolean[] incluyeAlmuerzo = {false, false, false, false, false, false, true, false, false};
 
@@ -77,42 +77,90 @@ public class Main {
     static ArrayList<String> alojamientosfiltrados = new ArrayList<>();
 
 
-
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
         ciudadesEncontradas();
         tiposAlojamientoEncontradas();
 
-        while (true) {
+        int opcionCiudad = -1;
+        int opcionConfirmarAlojamiento = -1;
+        int fechaInicio = -1;
+        int fechaFin = -1;
+        int cantidadAdultos = -1;
+        int cantidadNinos = -1;
+        int cantidadHabitaciones = -1;
+        int opcionTipoAlojamiento = -1;
+        int opcionHabitacion = -1;
+        ArrayList<Integer> optionEncontrada = new ArrayList<Integer>();
 
-            int opcionCiudad = seleccionarOpcion(scanner, "Seleccione la ciudad donde le gustaria hospedarse", ciudadesEncontradas);
-            if (opcionCiudad == -1) continue;
+        int step = 1; // Inicio en el paso 1
 
-            int opcionTipoAlojamiento = seleccionarOpcion(scanner, "Seleccione la tipo de alojamiento donde le gustaria hospedarse", tipoAlojamientos);
-            if (opcionTipoAlojamiento == -1) continue;
-//
+        while (step >= 1 && step <= 6) {
+            switch (step) {
+                case 1:
+                    opcionCiudad = seleccionarOpcion(scanner, "Seleccione la ciudad donde le gustaría hospedarse", ciudadesEncontradas);
+                    System.out.println(opcionCiudad == -1 ? "Ya está en el primer paso. No puede volver más atrás." : "");
+                    step = opcionCiudad == -1 ? step : step + 1;
+                    break;
+
+                case 2:
+                    opcionTipoAlojamiento = seleccionarOpcion(scanner, "Seleccione el tipo de alojamiento donde le gustaría hospedarse", tipoAlojamientos);
+                    if (opcionTipoAlojamiento == -1) {
+                        step--;
+                    } else {
+                        step++;
+                    }
+                    break;
+                case 3:
+                    fechaInicio = 1;
+                    fechaFin = 5;
+                    cantidadAdultos = 3;
+                    cantidadNinos = 2;
+                    cantidadHabitaciones = 2;
+                    step++;
+                    optionEncontrada = buscarAlojamientos(ciudadesEncontradas.get(opcionCiudad), tipoAlojamientos.get(opcionTipoAlojamiento), fechaInicio, fechaFin, cantidadAdultos, cantidadNinos, cantidadHabitaciones);
+                    System.out.println(optionEncontrada);
+                    break;
+                case 4:
+                    opcionConfirmarAlojamiento = seleccionarOpcion(scanner, "Seleccione una opción en la que le gustaría hospedarse:", alojamientosfiltrados);
+                    if (opcionConfirmarAlojamiento == -1) {
+                        step--;
+                    } else {
+                        step++;
+                    }
+                    break;
+                case 5:
+                    confirmarHabitaciones(nombres[optionEncontrada.get(opcionConfirmarAlojamiento)], fechaInicio, fechaFin, cantidadAdultos, cantidadNinos, cantidadHabitaciones, optionEncontrada.get(opcionConfirmarAlojamiento));
+                    System.out.println("¡Reserva confirmada exitosamente!");
+                    //optionEncontrada.get(opcionConfirmarAlojamiento) -> encontrar index expecifico de alojamiento
+                    step++;
+
+                    break;
+                case 6:
+//                    opcionCiudad= seleccionarOpcion(scanner,"Seleccione la habitacion interesada",habitaciones[][])
+//                    System.out.println(habitaciones[opcionConfirmarAlojamiento][0]);
+//                    step++;
+
+
+                    break;
+
+            }
+
+
 ////            int fechaInicio  = obtenerEntradaValida(scanner, "Ingrese  el día de inicio del hospedaje: ");
 ////            int fechaFin  = obtenerEntradaValida(scanner, "Ingrese el día de finalización del hospedaje: ");
 ////            int cantidadAdultos = obtenerEntradaValida(scanner, "Ingrese la cantidad de adultos: ");
 ////            int cantidadNinos = obtenerEntradaValida(scanner, "Ingrese la cantidad de niños: ");
 ////            int cantidadHabitaciones = obtenerEntradaValida(scanner, "Ingrese la cantidad de habitaciones: ");
-            int fechaInicio = 1;
-            int fechaFin = 5;
-            int cantidadAdultos = 3;
-            int cantidadNinos = 2;
-            int cantidadHabitaciones = 2;
-            ArrayList<Integer> optionEncontrada = buscarAlojamientos(ciudadesEncontradas.get(opcionCiudad), tipoAlojamientos.get(opcionTipoAlojamiento), fechaInicio, fechaFin, cantidadAdultos, cantidadNinos, cantidadHabitaciones);
-            System.out.println("----------------------------------------------------------------------------------------------------------------");
-            //opcion encontrada podremos saber el alojamiento especifico
-            int opcionConfirmarAlojamiento = seleccionarOpcion(scanner, "Seleccione una opcion que le gustaria hospedarse:", alojamientosfiltrados);
-            if (opcionConfirmarAlojamiento == -1) continue;
-            confirmarHabitaciones(nombres[optionEncontrada.get(opcionConfirmarAlojamiento)], fechaInicio, fechaFin, cantidadAdultos, cantidadNinos, cantidadHabitaciones, optionEncontrada.get(opcionConfirmarAlojamiento));
+
+//            System.out.println("----------------------------------------------------------------------------------------------------------------");
+//            //opcion encontrada podremos saber el alojamiento especifico
+//            int opcionConfirmarAlojamiento = seleccionarOpcion(scanner, "Seleccione una opcion que le gustaria hospedarse:", alojamientosfiltrados);
+//            if (opcionConfirmarAlojamiento == -1) continue;
+//            confirmarHabitaciones(nombres[optionEncontrada.get(opcionConfirmarAlojamiento)], fechaInicio, fechaFin, cantidadAdultos, cantidadNinos, cantidadHabitaciones, optionEncontrada.get(opcionConfirmarAlojamiento));
 
 
-
-            break;
-//
         }
     }
 
