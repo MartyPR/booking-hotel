@@ -58,6 +58,7 @@ public class Main {
                     {"Piscina", "Toboganes", "Zona de picnic"}
             }
     };
+    static boolean[] incluyeAlmuerzo = {false, false, false, false, false, false, true, false};
 
     static ArrayList<String> ciudadesEncontradas = new ArrayList<>();
     static ArrayList<String> tipoAlojamientos = new ArrayList<>();
@@ -102,9 +103,14 @@ public class Main {
         for (int indexCiudad : alojamientoCiudad) {
             if (tipos[indexCiudad] == tipoAlojamiento) {
                 System.out.println("Ciudad: " + ciudad + "\n" + "Tipo: " + tipos[indexCiudad] + "\n" + "Nombre:" + nombres[indexCiudad] + "\n" + calificaciones[indexCiudad] + "⭐");
-                double precio = calcularprecio(fechaInicio, fechaFin, cantidadHabitaciones,preciosPorNoche[indexCiudad][0]);
+                if (tipos[indexCiudad] == "Día de Sol") {
+                    mostrarActividades(indexCiudad);
+                } else {
+                    double precio = calcularprecio(fechaInicio, fechaFin, cantidadHabitaciones, preciosPorNoche[indexCiudad][0]);
+                }
             }
         }
+
     }
 
     public static void ciudadesEncontradas() {
@@ -161,6 +167,23 @@ public class Main {
         return precioFinal;
     }
 
+    public static void mostrarActividades(int indexAlojamiento) {
+        int contadorTipo = 0;
+        int contadorActividad = 1;
+        for (String[] habitacionesHotel : habitaciones[indexAlojamiento]) {
+            System.out.println("Tipo " + contadorTipo + ":" + "\n" + "Actividad(es)");
+            for (String actividad : habitaciones[indexAlojamiento][contadorTipo]) {
+                System.out.println(contadorActividad + ". " + actividad);
+                contadorActividad++;
+            }
+            System.out.println("Precio:" + preciosPorNoche[indexAlojamiento][contadorTipo]);
+            contadorTipo++;
+
+        }
+
+
+    }
+
     public static int obtenerEntradaValida(Scanner scanner, int maxOption) {
         int opcion = -1;
         while (true) {
@@ -195,7 +218,6 @@ public class Main {
         }
         System.out.println((opciones.size() + 1) + ". Volver");
     }
-
 
     public static int obtenerEntradaValida(Scanner scanner, String mensaje) {
         int opcion;
