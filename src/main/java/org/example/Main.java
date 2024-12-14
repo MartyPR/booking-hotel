@@ -95,7 +95,7 @@ public class Main {
             int opcionConfirmarHabitacion = seleccionarOpcion(scanner, "Seleccione una opcion que le gustaria hospedarse:", optionEncontrada);
             if (opcionConfirmarHabitacion == -1) continue;
 
-
+            confirmarHabitaciones(nombres[opcionConfirmarHabitacion], fechaInicio, fechaFin, cantidadAdultos, cantidadNinos, cantidadHabitaciones, opcionConfirmarHabitacion);
 
             break;
 //
@@ -115,7 +115,7 @@ public class Main {
                 System.out.println("Ciudad: " + ciudad + "\n" + "\n" + "Nombre:" + nombres[indexCiudad] + "\n" + calificaciones[indexCiudad] + "⭐");
                 alojamientosfiltrados.add(nombres[indexCiudad]);
                 if (tipos[indexCiudad] == "Día de Sol") {
-                    mostrarActividades(indexCiudad);
+                    mostrarHabitacionesActividades(indexCiudad, tipoAlojamiento, fechaInicio, fechaFin, cantidadHabitaciones, indexCiudad);
                 } else {
                     double precio = calcularPrecio(fechaInicio, fechaFin, cantidadHabitaciones, preciosPorNoche[indexCiudad][0]);
                 }
@@ -181,16 +181,24 @@ public class Main {
         return precioFinal;
     }
 
-    public static void mostrarActividades(int indexAlojamiento) {
+    public static void mostrarHabitacionesActividades(int indexAlojamiento, String tipoAlojamiento, int fechaInicio, int fechaFin, int cantidadHabitaciones, int indexCiudad) {
         int contadorTipo = 0;
         int contadorActividad = 1;
         for (String[] habitacionesHotel : habitaciones[indexAlojamiento]) {
-            System.out.println("Tipo " + contadorTipo + ":" + "\n" + "Actividad(es)");
-            for (String actividad : habitaciones[indexAlojamiento][contadorTipo]) {
-                System.out.println(contadorActividad + ". " + actividad);
-                contadorActividad++;
+            System.out.println(tipoAlojamiento == "Día de Sol" ?
+                    "Tipo " + contadorTipo + ":" + "\n" + "Actividad(es)" : (contadorTipo + 1) + ". " + habitaciones[indexAlojamiento][contadorTipo][0]);
+            if (tipoAlojamiento == "Día de Sol") {
+                for (String actividad : habitaciones[indexAlojamiento][contadorTipo]) {
+                    System.out.println(contadorActividad + ". " + actividad);
+                    contadorActividad++;
+                }
+                System.out.println("Precio:" + preciosPorNoche[indexAlojamiento][contadorTipo]);
+            } else {
+                System.out.println("Description: " + habitaciones[indexAlojamiento][contadorTipo][1]);
+                double precio = calcularPrecio(fechaInicio, fechaFin, cantidadHabitaciones, preciosPorNoche[indexAlojamiento][contadorTipo]);
             }
-            System.out.println("Precio:" + preciosPorNoche[indexAlojamiento][contadorTipo]);
+
+
             contadorTipo++;
 
         }
@@ -198,11 +206,14 @@ public class Main {
 
     }
 
-    public static void confirmarHabitaciones(String nombreHotel, int diaInicio, int diaFin, int cantidadAdultos, int cantidadNinos, int cantidadHabitaciones) {
+    public static void mostrarHabitaciones(int indexAlojamiento) {
+
+    }
+
+    public static void confirmarHabitaciones(String nombreHotel, int diaInicio, int diaFin, int cantidadAdultos, int cantidadNinos, int cantidadHabitaciones, int indexAlojamiento) {
         System.out.println("-------------------------------------------------------------------------------------");
-        System.out.println("Alojamiento seleccionado: "+ nombreHotel);
-
-
+        System.out.println("Alojamiento seleccionado: " + nombreHotel);
+        mostrarHabitacionesActividades(indexAlojamiento, tipos[indexAlojamiento], diaInicio, diaFin, cantidadHabitaciones, indexAlojamiento);
     }
     //funciones para validar y mostrar menus
 
@@ -220,7 +231,7 @@ public class Main {
                     System.out.println("close");
                     return -1;
                 } else {
-                    System.out.println("Opción no válida. Debe estar entre 1 y " + (maxOption+1) + ".");
+                    System.out.println("Opción no válida. Debe estar entre 1 y " + (maxOption + 1) + ".");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Entrada no válida. Por favor, ingrese un número.");
