@@ -3,6 +3,7 @@ package org.example;
 import java.util.*;
 
 public class Main {
+
     static String[] nombres = {
             "Hotel Paraíso", "Hotel Real", "Apartamento Luna",
             "Apartamento Sol", "Finca El Encanto", "Finca La Montaña", "Resort Brisa Marina"
@@ -88,28 +89,36 @@ public class Main {
             int cantidadAdultos = 3;
             int cantidadNinos = 2;
             int cantidadHabitaciones = 2;
-            buscarAlojamientos(ciudadesEncontradas.get(opcionCiudad), tipoAlojamientos.get(opcionTipoAlojamiento), fechaInicio, fechaFin, cantidadAdultos, cantidadNinos, cantidadHabitaciones);
+            int[] optionEncontrada = buscarAlojamientos(ciudadesEncontradas.get(opcionCiudad), tipoAlojamientos.get(opcionTipoAlojamiento), fechaInicio, fechaFin, cantidadAdultos, cantidadNinos, cantidadHabitaciones);
 
-
+            for (int i = 0; i < optionEncontrada.length; i++) {
+                System.out.println(optionEncontrada[i]);
+            }
             break;
 //
         }
     }
 
-    public static void buscarAlojamientos(String ciudad, String tipoAlojamiento, int fechaInicio, int fechaFin,
-                                          int cantidadAdultos, int cantidadNinos, int cantidadHabitaciones) {
+    public static int[] buscarAlojamientos(String ciudad, String tipoAlojamiento, int fechaInicio, int fechaFin,
+                                           int cantidadAdultos, int cantidadNinos, int cantidadHabitaciones) {
         System.out.println("-------------------------------------------------------------------------------------");
         List<Integer> alojamientoCiudad = filtrarPorSeleccion(ciudad, ciudades);
+        int[] alojamientosfiltrados = new int[alojamientoCiudad.size()];
+        int contador = 0;
         for (int indexCiudad : alojamientoCiudad) {
             if (tipos[indexCiudad] == tipoAlojamiento) {
-                System.out.println("Ciudad: " + ciudad + "\n" + "Tipo: " + tipos[indexCiudad] + "\n" + "Nombre:" + nombres[indexCiudad] + "\n" + calificaciones[indexCiudad] + "⭐");
+                System.out.println("Ciudad: " + ciudad + "\n" + "\n" + "Nombre:" + nombres[indexCiudad] + "\n" + calificaciones[indexCiudad] + "⭐");
+                alojamientosfiltrados[contador] = indexCiudad;
                 if (tipos[indexCiudad] == "Día de Sol") {
                     mostrarActividades(indexCiudad);
                 } else {
                     double precio = calcularprecio(fechaInicio, fechaFin, cantidadHabitaciones, preciosPorNoche[indexCiudad][0]);
                 }
             }
+            contador++;
         }
+        return alojamientosfiltrados;
+
 
     }
 
