@@ -72,7 +72,6 @@ public class Main {
             {10, 10},   // Disponibilidad inicial para Resort Brisa Marina
             {6, 4, 2}   // Disponibilidad inicial para Hotel Nube
     };
-    
 
 
     public static void main(String[] args) {
