@@ -67,11 +67,25 @@ public class Main {
 
     };
 
+
     //index hotel, index habitacion, index
     static int[][] reservacion;
 
-
     static boolean[] incluyeAlmuerzo = {false, false, false, false, false, false, true, false, false};
+
+    static int[][] habitacionesDisponibles = {
+            {10, 5, 2}, // Disponibilidad inicial para Hotel Paraíso
+            {8, 3, 1},  // Disponibilidad inicial para Hotel Real
+            {5, 2},     // Disponibilidad inicial para Apartamento Luna
+            {6, 3},     // Disponibilidad inicial para Apartamento Sol
+            {4, 3},     // Disponibilidad inicial para Finca El Encanto
+            {2, 8},     // Disponibilidad inicial para Finca La Montaña
+            {10, 10},   // Disponibilidad inicial para Resort Brisa Marina
+            {6, 4, 2}   // Disponibilidad inicial para Hotel Nube
+    };
+    static String[][] reservas = new String[100][6]; // ID, Nombre, Email, Fecha Nacimiento, Hotel ID, Habitación ID
+    static int reservasCount = 0;
+
 
     static ArrayList<String> ciudadesEncontradas = new ArrayList<>();//guarda las ciudades existentes
     static ArrayList<String> tipoAlojamientos = new ArrayList<>();//guarda los tipos de alojamientos existentes
@@ -128,7 +142,7 @@ public class Main {
                     fechaFin = 5;
                     cantidadAdultos = 3;
                     cantidadNinos = 2;
-                    cantidadHabitaciones = 2;
+                    cantidadHabitaciones = 3;
                     step++;
 
                     break;
@@ -179,12 +193,18 @@ public class Main {
                     }
                     break;
                 case 7:
-                    nombre = obtenerEntradaValidaTexto(scanner, "Escriba su nombre: ");
-                    apellido = obtenerEntradaValidaTexto(scanner, "Escriba su apellido: ");
-                    nacionalidad = obtenerEntradaValidaTexto(scanner, "Escriba su Nacionalidad: ");
-                    email = obtenerEntradaValidaTexto(scanner, "Escriba su email: ");
-                    telefono = obtenerEntradaValida(scanner, "Escriba su telefono: ");
-                    hora = obtenerEntradaValida(scanner, "Escriba la hora de llegada: ");
+//                    nombre = obtenerEntradaValidaTexto(scanner, "Escriba su nombre: ");
+//                    apellido = obtenerEntradaValidaTexto(scanner, "Escriba su apellido: ");
+//                    nacionalidad = obtenerEntradaValidaTexto(scanner, "Escriba su Nacionalidad: ");
+//                    email = obtenerEntradaValidaTexto(scanner, "Escriba su email: ");
+//                    telefono = obtenerEntradaValida(scanner, "Escriba su telefono: ");
+//                    hora = obtenerEntradaValida(scanner, "Escriba la hora de llegada: ");
+                    nombre = "Martin";
+                    apellido = "Par";
+                    nacionalidad = "CO";
+                    email = "@gmail";
+                    telefono = 123456789;
+                    hora = 12;
                     if (hora >= 0 && hora <= 24) {
                         step++;
                     } else {
@@ -192,9 +212,30 @@ public class Main {
                     }
                     break;
                 case 8:
-                    reservarAlojamiento(opcionesEncontrada.get(opcionConfirmarAlojamiento), cantidadHabitaciones, nombre, apellido, email, nacionalidad, telefono, hora);
+                    boolean confirmacionReservaAlojamiento = reservarAlojamiento(opcionesEncontrada.get(opcionConfirmarAlojamiento), habitacionSeleccionada, cantidadHabitaciones, nombre, apellido, email, nacionalidad, telefono, hora);
+                    if (confirmacionReservaAlojamiento) {
+                        step++;
+                    } else {
+                        System.out.println("Lo sentimos mucho, no puedes pedir mas habitaciones de las que hay");
+                        step = 2;
+                    }
                     break;
+                case 9:
+                    System.out.println("__________________________________________________________________");
+                    System.out.println("Proceso a seguir:");
+                    System.out.println("1. Confirmar");
+                    System.out.println("2. Atras");
+                    int opcionReserva = scanner.nextInt();
+                    if (opcionReserva == 1) {
+                        agregarReserva(in);
+                        step++;
+                    } else if (opcionReserva == 2) {
+                        step--;
+                    }else{
+                        System.out.println("Lo sentimos mucho, esa opcion no es valida");
+                    }
 
+                    break;
             }
 
 
@@ -305,24 +346,68 @@ public class Main {
                 System.out.println("Description: " + habitaciones[indexAlojamiento][contadorTipo][1]);
                 double precio = calcularPrecio(fechaInicio, fechaFin, cantidadHabitaciones, preciosPorNoche[indexAlojamiento][contadorTipo]);
             }
-
-
             contadorTipo++;
 
         }
-
-
     }
 
     public static void confirmarHabitaciones(String nombreHotel, int diaInicio, int diaFin, int cantidadAdultos, int cantidadNinos, int cantidadHabitaciones, int indexAlojamiento) {
         System.out.println("-------------------------------------------------------------------------------------");
         System.out.println("Alojamiento seleccionado: " + nombreHotel);
         mostrarHabitacionesActividades(indexAlojamiento, tipos[indexAlojamiento], diaInicio, diaFin, cantidadHabitaciones, indexAlojamiento);
+        System.out.println("_____________________>");
+        System.out.println("Disponibilidad de habitaciones:");
+        for (int i = 0; i < habitacionesDisponibles[indexAlojamiento].length; i++) {
+            if (habitacionesDisponibles[indexAlojamiento][i] > cantidadHabitaciones) {
+                System.out.println(habitaciones[indexAlojamiento][i][0] + ": "
+                        + habitacionesDisponibles[indexAlojamiento][i] + " disponibles");
+            }else {
+                System.out.println(habitaciones[indexAlojamiento][i][0] + ": "
+                        + habitacionesDisponibles[indexAlojamiento][i] + " disponibles (No Alcanzan las habitaciones disponibles)");
+            }
+        }
 
     }
 
-    public static void reservarAlojamiento(int indexAlojamiento, int cantidadHabitaciones, String nombre, String apellido, String email, String nacionalidad, int telefono, int horaLlegada) {
-        System.out.println(nombre);
+    public static boolean reservarAlojamiento(int indexAlojamiento, int habitacionSeleccionada, int cantidadHabitaciones, String nombre, String apellido, String email, String nacionalidad, int telefono, int horaLlegada) {
+        if (habitacionesDisponibles[indexAlojamiento][habitacionSeleccionada] >= cantidadHabitaciones) {
+            // Restar las habitaciones reservadas
+            habitacionesDisponibles[indexAlojamiento][habitacionSeleccionada] -= cantidadHabitaciones;
+
+            // Confirmación de la reserva
+            System.out.println("-----------------------------------------------------");
+            System.out.println("¡Reserva realizada con éxito!");
+            System.out.println("Datos de la reserva:");
+            System.out.println("Nombre: " + nombre + " " + apellido);
+            System.out.println("Email: " + email);
+            System.out.println("Nacionalidad: " + nacionalidad);
+            System.out.println("Teléfono: " + telefono);
+            System.out.println("Hora de llegada: " + horaLlegada + ":00");
+            System.out.println("Hotel: " + nombres[indexAlojamiento]);
+            System.out.println("Habitación: " + habitaciones[indexAlojamiento][habitacionSeleccionada][0]);
+            System.out.println("Cantidad de habitaciones reservadas: " + cantidadHabitaciones);
+            System.out.println("-----------------------------------------------------");
+            return true;
+        } else {
+            // Mensaje de error si no hay suficientes habitaciones
+            System.out.println("-----------------------------------------------------");
+            System.out.println("Lo sentimos, no hay suficientes habitaciones disponibles.");
+            System.out.println("Habitaciones disponibles para este tipo: "
+                    + habitacionesDisponibles[indexAlojamiento][habitacionSeleccionada]);
+            System.out.println("-----------------------------------------------------");
+            return false;
+        }
+    }
+
+    public static void agregarReserva(String nombre, String email, String fechaNacimiento, int hotelID, int habitacionID) {
+        reservas[reservasCount][0] = String.valueOf(reservasCount); // ID de reserva
+        reservas[reservasCount][1] = nombre;
+        reservas[reservasCount][2] = email;
+        reservas[reservasCount][3] = fechaNacimiento;
+        reservas[reservasCount][4] = String.valueOf(hotelID);
+        reservas[reservasCount][5] = String.valueOf(habitacionID);
+        reservasCount++;
+        System.out.println("Reserva creada con éxito. ID de reserva: " + (reservasCount - 1));
     }
 
     //funciones para validar y mostrar menus
