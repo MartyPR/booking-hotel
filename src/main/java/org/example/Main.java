@@ -66,7 +66,7 @@ public class Main {
             },
 
     };
-    
+
     //index hotel, index habitacion, index
     static int[][] reservacion;
 
@@ -99,7 +99,7 @@ public class Main {
 
         int step = 1; // Inicio en el paso 1
 
-        while (step >= 1 && step <= 6) {
+        while (step >= 1 && step <= 7) {
             switch (step) {
                 case 1:
                     ciudadSeleccionada = seleccionarOpcion(scanner, "Seleccione la ciudad donde le gustaría hospedarse", ciudadesEncontradas);
@@ -153,6 +153,26 @@ public class Main {
                     }
                     break;
                 case 6:
+                    System.out.println("__________________________________________________________________");
+                    System.out.println("Proceso a seguir:");
+                    System.out.println("1. Hacer Reservacion");
+                    System.out.println("2. volver atras");
+                    System.out.println("2. volver a consultar alojamiento");
+                    System.out.println("3. volver a menu inicial");
+
+                    int opcionMenuReservaSelecccionada = scanner.nextInt();
+                    if (opcionMenuReservaSelecccionada == 1) {
+                        step++;
+                    } else if (opcionMenuReservaSelecccionada == 2) {
+                        step--;
+                    } else if (opcionMenuReservaSelecccionada == 3) {
+                        step = step - 5;
+                    } else if (opcionMenuReservaSelecccionada == 4) {
+                        step = step - 5;
+                    }
+                    break;
+                case 7:
+
                     break;
 
 
@@ -290,6 +310,9 @@ public class Main {
 
     }
 
+    public static void reservarAlojamiento(int indexAlojamiento,int cantidadHabitaciones, String nombre, String apellido, String email, String nacionalidad, String telefono, String horaLlegada){
+    
+    }
     //funciones para validar y mostrar menus
     public static int obtenerEntradaValida(Scanner scanner, int maxOption) {
         int opcion = -1;
