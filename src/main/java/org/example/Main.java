@@ -91,6 +91,13 @@ public class Main {
         int cantidadAdultos = -1;
         int cantidadNinos = -1;
         int cantidadHabitaciones = -1;
+        //usuario
+        String nombre = "";
+        String apellido = "";
+        String email = "";
+        String nacionalidad = "";
+        int telefono = -1;
+        int hora = -1;
 
         int opcionHabitacion = -1;
         int habitacionSeleccionada = -1;
@@ -99,7 +106,7 @@ public class Main {
 
         int step = 1; // Inicio en el paso 1
 
-        while (step >= 1 && step <= 7) {
+        while (step >= 1 && step <= 8) {
             switch (step) {
                 case 1:
                     ciudadSeleccionada = seleccionarOpcion(scanner, "Seleccione la ciudad donde le gustaría hospedarse", ciudadesEncontradas);
@@ -157,8 +164,8 @@ public class Main {
                     System.out.println("Proceso a seguir:");
                     System.out.println("1. Hacer Reservacion");
                     System.out.println("2. volver atras");
-                    System.out.println("2. volver a consultar alojamiento");
-                    System.out.println("3. volver a menu inicial");
+                    System.out.println("3. volver a consultar alojamiento");
+                    System.out.println("4. volver a menu inicial");
 
                     int opcionMenuReservaSelecccionada = scanner.nextInt();
                     if (opcionMenuReservaSelecccionada == 1) {
@@ -172,9 +179,21 @@ public class Main {
                     }
                     break;
                 case 7:
-
+                    nombre = obtenerEntradaValidaTexto(scanner, "Escriba su nombre: ");
+                    apellido = obtenerEntradaValidaTexto(scanner, "Escriba su apellido: ");
+                    nacionalidad = obtenerEntradaValidaTexto(scanner, "Escriba su Nacionalidad: ");
+                    email = obtenerEntradaValidaTexto(scanner, "Escriba su email: ");
+                    telefono = obtenerEntradaValida(scanner, "Escriba su telefono: ");
+                    hora = obtenerEntradaValida(scanner, "Escriba la hora de llegada: ");
+                    if (hora >= 0 && hora <= 24) {
+                        step++;
+                    } else {
+                        System.out.println("algun dato esta mal, reescriba nuevamente los datos");
+                    }
                     break;
-
+                case 8:
+                    reservarAlojamiento(opcionesEncontrada.get(opcionConfirmarAlojamiento), cantidadHabitaciones, nombre, apellido, email, nacionalidad, telefono, hora);
+                    break;
 
             }
 
@@ -184,14 +203,6 @@ public class Main {
 ////            int cantidadAdultos = obtenerEntradaValida(scanner, "Ingrese la cantidad de adultos: ");
 ////            int cantidadNinos = obtenerEntradaValida(scanner, "Ingrese la cantidad de niños: ");
 ////            int cantidadHabitaciones = obtenerEntradaValida(scanner, "Ingrese la cantidad de habitaciones: ");
-
-//            System.out.println("----------------------------------------------------------------------------------------------------------------");
-//            //opcion encontrada podremos saber el alojamiento especifico
-//            int opcionConfirmarAlojamiento = seleccionarOpcion(scanner, "Seleccione una opcion que le gustaria hospedarse:", alojamientosfiltrados);
-//            if (opcionConfirmarAlojamiento == -1) continue;
-//            confirmarHabitaciones(nombres[optionEncontrada.get(opcionConfirmarAlojamiento)], fechaInicio, fechaFin, cantidadAdultos, cantidadNinos, cantidadHabitaciones, optionEncontrada.get(opcionConfirmarAlojamiento));
-
-
         }
     }
 
@@ -310,9 +321,10 @@ public class Main {
 
     }
 
-    public static void reservarAlojamiento(int indexAlojamiento,int cantidadHabitaciones, String nombre, String apellido, String email, String nacionalidad, String telefono, String horaLlegada){
-    
+    public static void reservarAlojamiento(int indexAlojamiento, int cantidadHabitaciones, String nombre, String apellido, String email, String nacionalidad, int telefono, int horaLlegada) {
+        System.out.println(nombre);
     }
+
     //funciones para validar y mostrar menus
     public static int obtenerEntradaValida(Scanner scanner, int maxOption) {
         int opcion = -1;
@@ -361,6 +373,23 @@ public class Main {
                 System.out.println("La cantidad no puede ser negativa.");
             } catch (InputMismatchException e) {
                 System.out.println("Entrada no válida. Por favor, ingrese un número.");
+                scanner.next(); // Limpiar el buffer
+            }
+        }
+    }
+
+    public static String obtenerEntradaValidaTexto(Scanner scanner, String mensaje) {
+        String opcion;
+        while (true) {
+            System.out.print(mensaje);
+            try {
+                opcion = scanner.nextLine();
+                if (opcion != "") {
+                    return opcion;  // Aceptamos solo valores no negativos
+                }
+                System.out.println(opcion);
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada no válida. Por favor, ingrese un texto.");
                 scanner.next(); // Limpiar el buffer
             }
         }
