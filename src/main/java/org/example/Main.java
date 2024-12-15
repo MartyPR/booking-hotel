@@ -96,7 +96,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         ciudadesEncontradas();
         tiposAlojamientoEncontradas();
-
+        int menuSeleccionada = -1;
         int ciudadSeleccionada = -1;
         int tipoAlojamientoSeleccionada = -1;
         int opcionConfirmarAlojamiento = -1;
@@ -124,17 +124,11 @@ public class Main {
         while (step >= 0 && step <= 12) {
             switch (step) {
                 case 0:
-                    System.out.println("Bienvenido a __________________");
-                    System.out.println("1. Consultar Disponibilidad");
-                    System.out.println("2. Autenticar y actualizar");
-                    for (int i = 0; i < 10; i++) {
-                        System.out.println(reservas[i][1]);
-                    }
-                    int opcionMenuInicial = scanner.nextInt();
-                    if (opcionMenuInicial == 1) {
+                    menuSeleccionada = seleccionarOpcionMenu(scanner, "Bienvenido a _____", new String[]{"Consultar y reservar", "Autenticar y Actualizar"});
+                    if (menuSeleccionada == 0) {
                         step++;
-                    } else if (opcionMenuInicial == 2) {
-                        step=11;
+                    } else if (menuSeleccionada == 1) {
+                        step = 11;
                     } else {
                         System.out.println("Seleccione una opcion Valida");
                     }
@@ -193,20 +187,14 @@ public class Main {
                     break;
                 case 6:
                     System.out.println("__________________________________________________________________");
-                    System.out.println("Proceso a seguir:");
-                    System.out.println("1. Hacer Reservacion");
-                    System.out.println("2. volver atras");
-                    System.out.println("3. volver a consultar alojamiento");
-                    System.out.println("4. volver a menu inicial");
-
-                    int opcionMenuReservaSelecccionada = scanner.nextInt();
-                    if (opcionMenuReservaSelecccionada == 1) {
+                    int opcionMenuReservaSelecccionada = seleccionarOpcionMenu(scanner, "Proceso a seguir:", new String[]{"Hacer Reservacion", "Volver Atras", "volver a consultar alojamiento", "volver a menu inicial"});
+                    if (opcionMenuReservaSelecccionada == 0) {
                         step++;
-                    } else if (opcionMenuReservaSelecccionada == 2) {
+                    } else if (opcionMenuReservaSelecccionada == 1) {
                         step--;
-                    } else if (opcionMenuReservaSelecccionada == 3) {
+                    } else if (opcionMenuReservaSelecccionada == 2) {
                         step = 1;
-                    } else if (opcionMenuReservaSelecccionada == 4) {
+                    } else if (opcionMenuReservaSelecccionada == 3) {
                         step = 0;
                     }
                     break;
@@ -241,14 +229,12 @@ public class Main {
                     break;
                 case 9:
                     System.out.println("__________________________________________________________________");
-                    System.out.println("Proceso a seguir:");
-                    System.out.println("1. Confirmar");
-                    System.out.println("2. Atras");
-                    int opcionReserva = scanner.nextInt();
-                    if (opcionReserva == 1) {
+
+                    int opcionReserva = seleccionarOpcionMenu(scanner,"Proceso a Seguir:",new String[]{"Confirmar","Atras"});
+                    if (opcionReserva == 0) {
                         agregarReserva(nombre, email, fechaNacimiento, opcionesEncontrada.get(opcionConfirmarAlojamiento), habitacionSeleccionada);
                         step++;
-                    } else if (opcionReserva == 2) {
+                    } else if (opcionReserva == 1) {
                         step--;
                     } else {
                         System.out.println("Lo sentimos mucho, esa opcion no es valida");
@@ -260,10 +246,10 @@ public class Main {
                     step = 0;
                     break;
                 case 11:
-                    System.out.println("1. Autenticar");
-                    System.out.println("2. Volver Menu inicial");
-                    int opcionMenuAutenticar = scanner.nextInt();
-                    if (opcionMenuAutenticar == 1) {
+
+
+                    int opcionMenuAutenticar = seleccionarOpcionMenu(scanner,"Menu para autenticar y Actualizar:",new String[]{"Autenticar","Atras al Menu Inicial"});
+                    if (opcionMenuAutenticar == 0) {
                         autenticarYActualizarReserva(scanner);
                     } else {
                         step = 1;
@@ -545,12 +531,25 @@ public class Main {
         return obtenerEntradaValida(scanner, opciones.size());
     }
 
+    public static int seleccionarOpcionMenu(Scanner scanner, String mensaje, String[] opciones) {
+        mostrarOpcionesMenu(mensaje, opciones);
+        return obtenerEntradaValida(scanner, opciones.length);
+    }
+
     public static void mostrarOpciones(String mensaje, ArrayList<String> opciones) {
         System.out.println(mensaje);
         for (int i = 0; i < opciones.size(); i++) {
             System.out.println((i + 1) + ". " + opciones.get(i));
         }
         System.out.println((opciones.size() + 1) + ". Volver");
+    }
+
+    public static void mostrarOpcionesMenu(String mensaje, String[] opciones) {
+        System.out.println(mensaje);
+        for (int i = 0; i < opciones.length; i++) {
+            System.out.println((i + 1) + ". " + opciones[i]);
+        }
+        System.out.println((opciones.length + 1) + ". Volver");
     }
 
     public static int obtenerEntradaValida(Scanner scanner, String mensaje) {
@@ -586,4 +585,22 @@ public class Main {
             }
         }
     }
+
+    public static int obtenerSeleccionMenu(Scanner scanner, String mensaje, int opciones, String[] mensajeOpciones) {
+        int opcion;
+        while (true) {
+            System.out.print(mensaje);
+            try {
+                opcion = scanner.nextInt();
+                if (opcion >= 0) {
+                    return opcion;  // Aceptamos solo valores no negativos
+                }
+                System.out.println("La cantidad no puede ser negativa.");
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada no válida. Por favor, ingrese un número.");
+                scanner.next(); // Limpiar el buffer
+            }
+        }
+    }
+
 }
