@@ -67,10 +67,6 @@ public class Main {
 
     };
 
-
-    //index hotel, index habitacion, index
-    static int[][] reservacion;
-
     static boolean[] incluyeAlmuerzo = {false, false, false, false, false, false, true, false, false};
 
     static int[][] habitacionesDisponibles = {
@@ -113,7 +109,6 @@ public class Main {
         String nacionalidad = "";
         int telefono = -1;
         int hora = -1;
-
         int opcionHabitacion = -1;
         int habitacionSeleccionada = -1;
         ArrayList<Integer> opcionesEncontrada = new ArrayList<Integer>();
@@ -149,14 +144,12 @@ public class Main {
                     }
                     break;
                 case 3:
-                    System.out.println(opcionesEncontrada);
-                    fechaInicio = 1;
-                    fechaFin = 5;
-                    cantidadAdultos = 3;
-                    cantidadNinos = 2;
-                    cantidadHabitaciones = 3;
+                    fechaInicio = obtenerEntradaValida(scanner, "Ingrese  el día de inicio del hospedaje: ");
+                    fechaFin = obtenerEntradaValida(scanner, "Ingrese el día de finalización del hospedaje: ");
+                    cantidadAdultos = obtenerEntradaValida(scanner, "Ingrese la cantidad de adultos: ");
+                    cantidadNinos = obtenerEntradaValida(scanner, "Ingrese la cantidad de niños: ");
+                    cantidadHabitaciones = obtenerEntradaValida(scanner, "Ingrese la cantidad de habitaciones: ");
                     step++;
-
                     break;
                 case 4:
                     opcionesEncontrada = buscarAlojamientos(ciudadesEncontradas.get(ciudadSeleccionada), tipoAlojamientos.get(tipoAlojamientoSeleccionada), fechaInicio, fechaFin, cantidadAdultos, cantidadNinos, cantidadHabitaciones);
@@ -199,19 +192,14 @@ public class Main {
                     }
                     break;
                 case 7:
-//                    nombre = obtenerEntradaValidaTexto(scanner, "Escriba su nombre: ");
-//                    apellido = obtenerEntradaValidaTexto(scanner, "Escriba su apellido: ");
-//                    nacionalidad = obtenerEntradaValidaTexto(scanner, "Escriba su Nacionalidad: ");
-//                    email = obtenerEntradaValidaTexto(scanner, "Escriba su email: ");
-//                    telefono = obtenerEntradaValida(scanner, "Escriba su telefono: ");
-//                    hora = obtenerEntradaValida(scanner, "Escriba la hora de llegada: ");
-                    nombre = "Martin";
-                    apellido = "Par";
-                    fechaNacimiento = "123";
-                    nacionalidad = "CO";
-                    email = "@gmail";
-                    telefono = 123456789;
-                    hora = 12;
+                    nombre = obtenerEntradaValidaTexto(scanner, "Escriba su nombre: ");
+                    apellido = obtenerEntradaValidaTexto(scanner, "Escriba su apellido: ");
+                    fechaNacimiento = obtenerEntradaValidaTexto(scanner, "Escriba su Fecha de Nacimiento: ");
+                    nacionalidad = obtenerEntradaValidaTexto(scanner, "Escriba su Nacionalidad: ");
+                    email = obtenerEntradaValidaTexto(scanner, "Escriba su email: ");
+                    telefono = obtenerEntradaValida(scanner, "Escriba su telefono: ");
+                    hora = obtenerEntradaValida(scanner, "Escriba la hora de llegada: ");
+
                     if (hora >= 0 && hora <= 24) {
                         step++;
                     } else {
@@ -230,7 +218,7 @@ public class Main {
                 case 9:
                     System.out.println("__________________________________________________________________");
 
-                    int opcionReserva = seleccionarOpcionMenu(scanner,"Proceso a Seguir:",new String[]{"Confirmar","Atras"});
+                    int opcionReserva = seleccionarOpcionMenu(scanner, "Proceso a Seguir:", new String[]{"Confirmar", "Atras"});
                     if (opcionReserva == 0) {
                         agregarReserva(nombre, email, fechaNacimiento, opcionesEncontrada.get(opcionConfirmarAlojamiento), habitacionSeleccionada);
                         step++;
@@ -248,7 +236,7 @@ public class Main {
                 case 11:
 
 
-                    int opcionMenuAutenticar = seleccionarOpcionMenu(scanner,"Menu para autenticar y Actualizar:",new String[]{"Autenticar","Atras al Menu Inicial"});
+                    int opcionMenuAutenticar = seleccionarOpcionMenu(scanner, "Menu para autenticar y Actualizar:", new String[]{"Autenticar", "Atras al Menu Inicial"});
                     if (opcionMenuAutenticar == 0) {
                         autenticarYActualizarReserva(scanner);
                     } else {
@@ -258,11 +246,6 @@ public class Main {
                     break;
             }
 
-////            int fechaInicio  = obtenerEntradaValida(scanner, "Ingrese  el día de inicio del hospedaje: ");
-////            int fechaFin  = obtenerEntradaValida(scanner, "Ingrese el día de finalización del hospedaje: ");
-////            int cantidadAdultos = obtenerEntradaValida(scanner, "Ingrese la cantidad de adultos: ");
-////            int cantidadNinos = obtenerEntradaValida(scanner, "Ingrese la cantidad de niños: ");
-////            int cantidadHabitaciones = obtenerEntradaValida(scanner, "Ingrese la cantidad de habitaciones: ");
         }
     }
 
