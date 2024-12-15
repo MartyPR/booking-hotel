@@ -62,6 +62,17 @@ public class Main {
 
     static ArrayList<String> ciudadesEncontradas = new ArrayList<>();
     static ArrayList<String> tipoAlojamientos = new ArrayList<>();
+    static int[][] habitacionesDisponibles = {
+            {10, 5, 2}, // Disponibilidad inicial para Hotel Paraíso
+            {8, 3, 1},  // Disponibilidad inicial para Hotel Real
+            {5, 2},     // Disponibilidad inicial para Apartamento Luna
+            {6, 3},     // Disponibilidad inicial para Apartamento Sol
+            {4, 3},     // Disponibilidad inicial para Finca El Encanto
+            {2, 8},     // Disponibilidad inicial para Finca La Montaña
+            {10, 10},   // Disponibilidad inicial para Resort Brisa Marina
+            {6, 4, 2}   // Disponibilidad inicial para Hotel Nube
+    };
+    
 
 
     public static void main(String[] args) {
