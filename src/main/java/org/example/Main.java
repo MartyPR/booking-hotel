@@ -19,19 +19,21 @@ public class Main {
 
     static double[] calificaciones = {5.0, 4.2, 4.4, 3, 3.8, 4.0, 3.9, 2.5};
     static int[][] preciosPorNoche = {
-            {150000, 200000, 350000}, // Precios para Hotel Paraíso
-            {120000, 250000, 500000}, // Precios para Hotel Real
+            {150000, 200000, 350000, 250000, 320000}, // Precios para Hotel Paraíso
+            {120000, 250000, 500000}, // Precios para Real
             {300000, 250000},         // Precios para Apartamento Luna
             {200000, 350000},         // Precios para Apartamento Sol
             {300000, 280000},         // Precios para Finca El Encanto
             {400000, 150000},         // Precios para Finca La Montaña
             {120000, 90000},
-            {100000, 150000, 230000}// Precios para Hotel Nube
+            {100000, 150000, 230000}// Precios para Nube
     };
     static String[][][] habitaciones = {
             {
                     {"Sencilla", "1 cama sencilla, TV, baño privado"},
+                    {"Lujo", "2 cama sencilla, TV, baño privado"},
                     {"Doble", "2 camas sencillas, aire acondicionado"},
+                    {"Triple", "2 camas sencillas, aire acondicionado"},
                     {"Suite", "1 cama king, jacuzzi, balcón"}
             },
             {
@@ -56,8 +58,8 @@ public class Main {
                     {"Habitación Compartida", "4 camas individuales, baño compartido"}
             },
             {
-                    {"Piscina", "Deportes acuáticos", "Tour en lancha"},
-                    {"Piscina", "Toboganes", "Zona de picnic"}
+                    {"Tipo 1 : Piscina", "Deportes acuáticos", "Tour en lancha"},
+                    {"Tipo 2 : Picnic", " Piscina/Toboganes", "Zona de picnic"}
             },
             {
                     {"Sencilla", "1 cama sencilla, TV, baño privado"},
@@ -70,17 +72,30 @@ public class Main {
     static boolean[] incluyeAlmuerzo = {false, false, false, false, false, false, true, false, false};
 
     static int[][] habitacionesDisponibles = {
-            {10, 5, 2}, // Disponibilidad inicial para Hotel Paraíso
+            {10, 5, 2, 2, 2}, // Disponibilidad inicial para Hotel Paraíso
             {8, 3, 1},  // Disponibilidad inicial para Hotel Real
             {5, 2},     // Disponibilidad inicial para Apartamento Luna
             {6, 3},     // Disponibilidad inicial para Apartamento Sol
             {4, 3},     // Disponibilidad inicial para Finca El Encanto
-            {2, 8},     // Disponibilidad inicial para Finca La Montaña
+            {5, 8},     // Disponibilidad inicial para Finca La Montaña
             {10, 10},   // Disponibilidad inicial para Resort Brisa Marina
             {6, 4, 2}   // Disponibilidad inicial para Hotel Nube
     };
+    static int[][] personasHabitacion = {
+            {4, 6, 5, 4, 4}, // Disponibilidad  de personas para Hotel Paraíso
+            {3, 5, 4},  // Disponibilidad de personas para Hotel Real
+            {3, 5},     // Disponibilidad de personas para Apartamento Luna
+            {3, 4},     // Disponibilidad de personas para Apartamento Sol
+            {4, 3},     // Disponibilidad de personas para Finca El Encanto
+            {3, 6},     // Disponibilidad de personas para Finca La Montaña
+            {10, 10},   // Disponibilidad de personas para Resort Brisa Marina
+            {3, 4, 3}   // Disponibilidad de personas para Hotel Nube
+    };
+
     static String[][] reservas = new String[100][6]; // ID, Nombre, Email, Fecha Nacimiento, Hotel ID, Habitación ID
+    static int[][] habitaciondisponibilidadDia = new int[100][5]; //Id, idHotel,Habitacion ID, diaInicio,diaFinal, nuevoValorHabitacion
     static int reservasCount = 0;
+    static int disponibilidadCount = 0;
 
 
     static ArrayList<String> ciudadesEncontradas = new ArrayList<>();//guarda las ciudades existentes
@@ -109,7 +124,6 @@ public class Main {
         String nacionalidad = "";
         int telefono = -1;
         int hora = -1;
-        int opcionHabitacion = -1;
         int habitacionSeleccionada = -1;
         ArrayList<Integer> opcionesEncontrada = new ArrayList<Integer>();
         ArrayList<String> opcionesHabitaciones = new ArrayList<String>();
@@ -119,29 +133,18 @@ public class Main {
         while (step >= 0 && step <= 12) {
             switch (step) {
                 case 0:
-                    menuSeleccionada = seleccionarOpcionMenu(scanner, "Bienvenido a _____", new String[]{"Consultar y reservar", "Autenticar y Actualizar"});
-                    if (menuSeleccionada == 0) {
-                        step++;
-                    } else if (menuSeleccionada == 1) {
-                        step = 11;
-                    } else {
-                        System.out.println("Seleccione una opcion Valida");
-                    }
+                    menuSeleccionada = seleccionarOpcionMenu(scanner, "___Bienvenido a Booking Hotel___", new String[]{"Consultar y reservar", "Autenticar y Actualizar"});
+                    step = (menuSeleccionada == 0) ? 1 : (menuSeleccionada == 1 ? 11 : 0);
 
                     break;
                 case 1:
-                    ciudadSeleccionada = seleccionarOpcion(scanner, "Seleccione la ciudad donde le gustaría hospedarse", ciudadesEncontradas);
-                    System.out.println(ciudadSeleccionada == -1 ? step-- : "");
-                    step = ciudadSeleccionada == -1 ? step : step + 1;
+                    ciudadSeleccionada = seleccionarOpcion(scanner, "___Seleccione la ciudad donde le gustaría hospedarse___", ciudadesEncontradas);
+                    step = validarSeleccion(ciudadSeleccionada, step);
                     break;
 
                 case 2:
-                    tipoAlojamientoSeleccionada = seleccionarOpcion(scanner, "Seleccione el tipo de alojamiento donde le gustaría hospedarse", tipoAlojamientos);
-                    if (tipoAlojamientoSeleccionada == -1) {
-                        step--;
-                    } else {
-                        step++;
-                    }
+                    tipoAlojamientoSeleccionada = seleccionarOpcion(scanner, "___Seleccione el tipo de alojamiento donde le gustaría hospedarse___", tipoAlojamientos);
+                    step = validarSeleccion(tipoAlojamientoSeleccionada, step);
                     break;
                 case 3:
                     fechaInicio = obtenerEntradaValida(scanner, "Ingrese  el día de inicio del hospedaje: ");
@@ -149,21 +152,31 @@ public class Main {
                     cantidadAdultos = obtenerEntradaValida(scanner, "Ingrese la cantidad de adultos: ");
                     cantidadNinos = obtenerEntradaValida(scanner, "Ingrese la cantidad de niños: ");
                     cantidadHabitaciones = obtenerEntradaValida(scanner, "Ingrese la cantidad de habitaciones: ");
-                    step++;
-                    break;
-                case 4:
-                    opcionesEncontrada = buscarAlojamientos(ciudadesEncontradas.get(ciudadSeleccionada), tipoAlojamientos.get(tipoAlojamientoSeleccionada), fechaInicio, fechaFin, cantidadAdultos, cantidadNinos, cantidadHabitaciones);
-                    System.out.println(opcionesEncontrada);
-                    opcionConfirmarAlojamiento = seleccionarOpcion(scanner, "Seleccione una opción en la que le gustaría hospedarse:", alojamientosfiltrados);
-                    if (opcionConfirmarAlojamiento == -1) {
-                        step = step - 2;
-
+                    if (fechaInicio >= fechaFin) {
+                        System.out.println("Has ingresado fechas incorrectas");
                     } else {
                         step++;
                     }
 
+//                    System.out.println(opcionesEncontrada);
+//                    fechaInicio = 1;
+//                    fechaFin = 5;
+//                    cantidadAdultos = 2;
+//                    cantidadNinos = 1;
+//                    cantidadHabitaciones = 3;
+//                    step++;
+
+                    break;
+                case 4:
+
+                    opcionesEncontrada = buscarAlojamientos(ciudadesEncontradas.get(ciudadSeleccionada), tipoAlojamientos.get(tipoAlojamientoSeleccionada), fechaInicio, fechaFin, cantidadAdultos, cantidadNinos, cantidadHabitaciones);
+                    System.out.println(opcionesEncontrada);
+                    opcionConfirmarAlojamiento = seleccionarOpcion(scanner, "___Seleccione una opción en la que le gustaría hospedarse:____", alojamientosfiltrados);
+                    step = (opcionConfirmarAlojamiento == -1) ? 2 : 5;
+
                     //opcionesEncontrada.get(opcionConfirmarAlojamiento) -> encontrar index expecifico de alojamiento
                     break;
+
                 case 5:
                     confirmarHabitaciones(nombres[opcionesEncontrada.get(opcionConfirmarAlojamiento)], fechaInicio, fechaFin, cantidadAdultos, cantidadNinos, cantidadHabitaciones, opcionesEncontrada.get(opcionConfirmarAlojamiento));
                     System.out.println("--------------------------------------------------------------\n");
@@ -172,34 +185,30 @@ public class Main {
                         opcionesHabitaciones.add(habitaciones[opcionesEncontrada.get(opcionConfirmarAlojamiento)][i][0]);
                     }
                     habitacionSeleccionada = seleccionarOpcion(scanner, "Seleccionar el tipo de habitacion que desea", opcionesHabitaciones);
-                    if (habitacionSeleccionada == -1) {
-                        step--;
-                    } else {
-                        step++;
-                    }
-                    break;
+                    step = (habitacionSeleccionada == -1) ? 4 : 6;
                 case 6:
                     System.out.println("__________________________________________________________________");
-                    int opcionMenuReservaSelecccionada = seleccionarOpcionMenu(scanner, "Proceso a seguir:", new String[]{"Hacer Reservacion", "Volver Atras", "volver a consultar alojamiento", "volver a menu inicial"});
-                    if (opcionMenuReservaSelecccionada == 0) {
-                        step++;
-                    } else if (opcionMenuReservaSelecccionada == 1) {
-                        step--;
-                    } else if (opcionMenuReservaSelecccionada == 2) {
-                        step = 1;
-                    } else if (opcionMenuReservaSelecccionada == 3) {
-                        step = 0;
-                    }
+                    int opcionMenuReserva = seleccionarOpcionMenu(scanner, "Proceso a seguir:", new String[]{"Hacer Reservacion", "Volver Atras", "volver a consultar alojamiento", "volver a menu inicial"});
+                    if (opcionMenuReserva == 0) step++;
+                    else if (opcionMenuReserva == 1) step--;
+                    else if (opcionMenuReserva == 2) step = 1;
+                    else if (opcionMenuReserva == 3) step = 0;
                     break;
                 case 7:
                     nombre = obtenerEntradaValidaTexto(scanner, "Escriba su nombre: ");
                     apellido = obtenerEntradaValidaTexto(scanner, "Escriba su apellido: ");
-                    fechaNacimiento = obtenerEntradaValidaTexto(scanner, "Escriba su Fecha de Nacimiento: ");
+                    fechaNacimiento = obtenerEntradaValidaTexto(scanner, "Escriba su Fecha de Nacimiento dd/MM/yyyy : ");
                     nacionalidad = obtenerEntradaValidaTexto(scanner, "Escriba su Nacionalidad: ");
                     email = obtenerEntradaValidaTexto(scanner, "Escriba su email: ");
                     telefono = obtenerEntradaValida(scanner, "Escriba su telefono: ");
                     hora = obtenerEntradaValida(scanner, "Escriba la hora de llegada: ");
-
+//                    nombre = "Martin";
+//                    apellido = "Par";
+//                    fechaNacimiento = "123";
+//                    nacionalidad = "CO";
+//                    email = "@gmail";
+//                    telefono = 123456789;
+//                    hora = 12;
                     if (hora >= 0 && hora <= 24) {
                         step++;
                     } else {
@@ -207,26 +216,17 @@ public class Main {
                     }
                     break;
                 case 8:
-                    boolean confirmacionReservaAlojamiento = reservarAlojamiento(opcionesEncontrada.get(opcionConfirmarAlojamiento), habitacionSeleccionada, cantidadHabitaciones, nombre, apellido, email, nacionalidad, telefono, hora);
-                    if (confirmacionReservaAlojamiento) {
-                        step++;
-                    } else {
-                        System.out.println("Lo sentimos mucho, no puedes pedir mas habitaciones de las que hay");
-                        step = 2;
-                    }
+                    boolean confirmacionReservaAlojamiento = reservarAlojamiento(opcionesEncontrada.get(opcionConfirmarAlojamiento), habitacionSeleccionada, cantidadHabitaciones, nombre, apellido, email, nacionalidad, telefono, hora, fechaInicio, fechaFin, cantidadAdultos, cantidadNinos);
+                    step = confirmacionReservaAlojamiento ? 9 : 2;
                     break;
                 case 9:
                     System.out.println("__________________________________________________________________");
 
-                    int opcionReserva = seleccionarOpcionMenu(scanner, "Proceso a Seguir:", new String[]{"Confirmar", "Atras"});
-                    if (opcionReserva == 0) {
+                    int confirmarReserva = seleccionarOpcionMenu(scanner, "Proceso a Seguir:", new String[]{"Confirmar", "Atras"});
+                    if (confirmarReserva == 0) {
                         agregarReserva(nombre, email, fechaNacimiento, opcionesEncontrada.get(opcionConfirmarAlojamiento), habitacionSeleccionada);
                         step++;
-                    } else if (opcionReserva == 1) {
-                        step--;
-                    } else {
-                        System.out.println("Lo sentimos mucho, esa opcion no es valida");
-                    }
+                    } else step--;
 
                     break;
                 case 10:
@@ -235,13 +235,9 @@ public class Main {
                     break;
                 case 11:
 
-
                     int opcionMenuAutenticar = seleccionarOpcionMenu(scanner, "Menu para autenticar y Actualizar:", new String[]{"Autenticar", "Atras al Menu Inicial"});
-                    if (opcionMenuAutenticar == 0) {
-                        autenticarYActualizarReserva(scanner);
-                    } else {
-                        step = 1;
-                    }
+                    if (opcionMenuAutenticar == 0) autenticarYActualizarReserva(scanner);
+                    step = 0;
 
                     break;
             }
@@ -265,6 +261,7 @@ public class Main {
                 alojamientosfiltrados.add(nombres[indexCiudad]);
                 if (tipos[indexCiudad] == "Día de Sol") {
                     mostrarHabitacionesActividades(indexCiudad, tipoAlojamiento, fechaInicio, fechaFin, cantidadHabitaciones, indexCiudad);
+                    System.out.println(incluyeAlmuerzo[indexCiudad] ? "Almuerzo: Si" : "Almuerzo: No");
                 } else {
                     double precio = calcularPrecio(fechaInicio, fechaFin, cantidadHabitaciones, preciosPorNoche[indexCiudad][0]);
                 }
@@ -346,6 +343,7 @@ public class Main {
                 System.out.println("Precio:" + preciosPorNoche[indexAlojamiento][contadorTipo]);
             } else {
                 System.out.println("Description: " + habitaciones[indexAlojamiento][contadorTipo][1]);
+                System.out.println("Max Personas: " + personasHabitacion[indexAlojamiento][contadorTipo]);
                 double precio = calcularPrecio(fechaInicio, fechaFin, cantidadHabitaciones, preciosPorNoche[indexAlojamiento][contadorTipo]);
             }
             contadorTipo++;
@@ -359,44 +357,66 @@ public class Main {
         mostrarHabitacionesActividades(indexAlojamiento, tipos[indexAlojamiento], diaInicio, diaFin, cantidadHabitaciones, indexAlojamiento);
         System.out.println("_____________________>");
         System.out.println("Disponibilidad de habitaciones:");
+        for (int i = 0; i < habitaciondisponibilidadDia.length; i++) {
+            if (habitaciondisponibilidadDia[i][1] == indexAlojamiento && habitaciondisponibilidadDia[i][4] == diaInicio && habitaciondisponibilidadDia[i][5] == diaFin) {
+                System.out.println(habitaciones[indexAlojamiento][i][0] + ": "
+                        + habitaciondisponibilidadDia[i][1] + " disponibles");
+            }
+        }
         for (int i = 0; i < habitacionesDisponibles[indexAlojamiento].length; i++) {
+
             if (habitacionesDisponibles[indexAlojamiento][i] > cantidadHabitaciones) {
+
                 System.out.println(habitaciones[indexAlojamiento][i][0] + ": "
                         + habitacionesDisponibles[indexAlojamiento][i] + " disponibles");
             } else {
                 System.out.println(habitaciones[indexAlojamiento][i][0] + ": "
                         + habitacionesDisponibles[indexAlojamiento][i] + " disponibles (No Alcanzan las habitaciones disponibles)");
             }
+
+
         }
 
     }
 
-    public static boolean reservarAlojamiento(int indexAlojamiento, int habitacionSeleccionada, int cantidadHabitaciones, String nombre, String apellido, String email, String nacionalidad, int telefono, int horaLlegada) {
-        if (habitacionesDisponibles[indexAlojamiento][habitacionSeleccionada] >= cantidadHabitaciones) {
-            // Restar las habitaciones reservadas
-            habitacionesDisponibles[indexAlojamiento][habitacionSeleccionada] -= cantidadHabitaciones;
+    public static boolean reservarAlojamiento(int indexAlojamiento, int habitacionSeleccionada, int cantidadHabitaciones, String nombre, String apellido, String email, String nacionalidad, int telefono, int horaLlegada, int diaInicio, int diaFin, int adultos, int ninos) {
+        if (personasHabitacion[indexAlojamiento][habitacionSeleccionada] * cantidadHabitaciones >= (adultos + ninos)) {
+            if (habitacionesDisponibles[indexAlojamiento][habitacionSeleccionada] >= cantidadHabitaciones) {
+                // Restar las habitaciones reservadas
+                habitacionesDisponibles[indexAlojamiento][habitacionSeleccionada] -= cantidadHabitaciones;
+//            habitaciondisponibilidadDia[disponibilidadCount][0] = disponibilidadCount;
+//            habitaciondisponibilidadDia[disponibilidadCount][1] = indexAlojamiento;
+//            habitaciondisponibilidadDia[disponibilidadCount][2] = habitacionSeleccionada;
+//            habitaciondisponibilidadDia[disponibilidadCount][3] = habitacionesDisponibles[indexAlojamiento][habitacionSeleccionada] - cantidadHabitaciones;
+//            habitaciondisponibilidadDia[disponibilidadCount][4] = diaInicio;
+//            habitaciondisponibilidadDia[disponibilidadCount][5] = diaFin;
 
-            // Confirmación de la reserva
-            System.out.println("-----------------------------------------------------");
-            System.out.println("¡Reserva realizada con éxito!");
-            System.out.println("Datos de la reserva:");
-            System.out.println("Nombre: " + nombre + " " + apellido);
-            System.out.println("Email: " + email);
-            System.out.println("Nacionalidad: " + nacionalidad);
-            System.out.println("Teléfono: " + telefono);
-            System.out.println("Hora de llegada: " + horaLlegada + ":00");
-            System.out.println("Hotel: " + nombres[indexAlojamiento]);
-            System.out.println("Habitación: " + habitaciones[indexAlojamiento][habitacionSeleccionada][0]);
-            System.out.println("Cantidad de habitaciones reservadas: " + cantidadHabitaciones);
-            System.out.println("-----------------------------------------------------");
-            return true;
+
+                // Confirmación de la reserva
+                System.out.println("-----------------------------------------------------");
+                System.out.println("¡Reserva realizada con éxito!");
+                System.out.println("Datos de la reserva:");
+                System.out.println("Nombre: " + nombre + " " + apellido);
+                System.out.println("Email: " + email);
+                System.out.println("Nacionalidad: " + nacionalidad);
+                System.out.println("Teléfono: " + telefono);
+                System.out.println("Hora de llegada: " + horaLlegada + ":00");
+                System.out.println("Hotel: " + nombres[indexAlojamiento]);
+                System.out.println("Habitación: " + habitaciones[indexAlojamiento][habitacionSeleccionada][0]);
+                System.out.println("Cantidad de habitaciones reservadas: " + cantidadHabitaciones);
+                System.out.println("-----------------------------------------------------");
+                return true;
+            } else {
+                // Mensaje de error si no hay suficientes habitaciones
+                System.out.println("-----------------------------------------------------");
+                System.out.println("Lo sentimos, no hay suficientes habitaciones disponibles.");
+                System.out.println("Habitaciones disponibles para este tipo: "
+                        + habitacionesDisponibles[indexAlojamiento][habitacionSeleccionada]);
+                System.out.println("-----------------------------------------------------");
+                return false;
+            }
         } else {
-            // Mensaje de error si no hay suficientes habitaciones
-            System.out.println("-----------------------------------------------------");
-            System.out.println("Lo sentimos, no hay suficientes habitaciones disponibles.");
-            System.out.println("Habitaciones disponibles para este tipo: "
-                    + habitacionesDisponibles[indexAlojamiento][habitacionSeleccionada]);
-            System.out.println("-----------------------------------------------------");
+            System.out.println("Limite de Personas por habitacion superado");
             return false;
         }
     }
@@ -409,6 +429,7 @@ public class Main {
         reservas[reservasCount][4] = String.valueOf(hotelID);
         reservas[reservasCount][5] = String.valueOf(habitacionID);
         reservasCount++;
+        disponibilidadCount++;
         System.out.println("Reserva creada con éxito. ID de reserva: " + (reservasCount - 1));
     }
 
@@ -437,6 +458,7 @@ public class Main {
         System.out.println("Hotel: " + nombres[Integer.parseInt(reservas[reservaIndex][4])]);
         System.out.println("Habitación: " + habitaciones[Integer.parseInt(reservas[reservaIndex][4])]
                 [Integer.parseInt(reservas[reservaIndex][5])][0]);
+
 
         System.out.println("Seleccione la opción que desea realizar:");
         System.out.println("1. Cambiar de habitación");
@@ -586,4 +608,7 @@ public class Main {
         }
     }
 
+    private static int validarSeleccion(int seleccion, int pasoActual) {
+        return (seleccion == -1) ? pasoActual - 1 : pasoActual + 1;
+    }
 }
