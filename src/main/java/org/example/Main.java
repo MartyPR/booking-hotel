@@ -273,7 +273,6 @@ public class Main {
 
 
     }
-
     public static void ciudadesEncontradas() {
         ciudadesEncontradas.clear();
         for (String ciudad : ciudades) {
@@ -384,14 +383,6 @@ public class Main {
             if (habitacionesDisponibles[indexAlojamiento][habitacionSeleccionada] >= cantidadHabitaciones) {
                 // Restar las habitaciones reservadas
                 habitacionesDisponibles[indexAlojamiento][habitacionSeleccionada] -= cantidadHabitaciones;
-//            habitaciondisponibilidadDia[disponibilidadCount][0] = disponibilidadCount;
-//            habitaciondisponibilidadDia[disponibilidadCount][1] = indexAlojamiento;
-//            habitaciondisponibilidadDia[disponibilidadCount][2] = habitacionSeleccionada;
-//            habitaciondisponibilidadDia[disponibilidadCount][3] = habitacionesDisponibles[indexAlojamiento][habitacionSeleccionada] - cantidadHabitaciones;
-//            habitaciondisponibilidadDia[disponibilidadCount][4] = diaInicio;
-//            habitaciondisponibilidadDia[disponibilidadCount][5] = diaFin;
-
-
                 // Confirmación de la reserva
                 System.out.println("-----------------------------------------------------");
                 System.out.println("¡Reserva realizada con éxito!");
@@ -508,6 +499,10 @@ public class Main {
         main(new String[]{}); // Reinicia el proceso desde el principio
     }
 
+    private static int validarSeleccion(int seleccion, int pasoActual) {
+        return (seleccion == -1) ? pasoActual - 1 : pasoActual + 1;
+    }
+
     //funciones para validar y mostrar menus
     public static int obtenerEntradaValida(Scanner scanner, int maxOption) {
         int opcion = -1;
@@ -608,7 +603,5 @@ public class Main {
         }
     }
 
-    private static int validarSeleccion(int seleccion, int pasoActual) {
-        return (seleccion == -1) ? pasoActual - 1 : pasoActual + 1;
-    }
+
 }
